@@ -385,7 +385,11 @@ def main():
             st.success("Admin authenticated")
             st.subheader(loc['edit_factors'])
             factors_df = pd.DataFrame(list(factors.items()), columns=['category','factor'])
-            edited = st.experimental_data_editor(factors_df, num_rows='dynamic')
+            edited = st.data_editor(
+    factors_df,
+    use_container_width=True,
+    disabled=False
+)
             if st.button(loc['save']):
                 for _, r in edited.iterrows():
                     set_factor(r['category'], r['factor'])
