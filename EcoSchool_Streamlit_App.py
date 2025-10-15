@@ -49,7 +49,6 @@ import base64
 DB_FILE = "ecoschool.db"
 ADMIN_PASSWORD = "schooladmin"  # change before deployment
 DEFAULT_FACTORS = {
-    "Electricity (kWh)": 0.82,    # kg CO2 per kWh (example)
     "Paper (sheets)": 0.005,      # kg CO2 per sheet
     "Plastic (kg)": 6.0,          # kg CO2 per kg plastic
     "Food/Waste (kg)": 3.0,       # kg CO2 per kg
