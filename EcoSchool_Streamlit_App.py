@@ -345,7 +345,7 @@ def main():
                     if row['verified'] == 0:
                         if st.button(f"{loc['verify']} {int(row['id'])}"):
                             verify_entry(int(row['id']))
-                            st.experimental_rerun()
+                            st.rerun()
                     else:
                         st.write("✅ Verified")
 
