@@ -262,13 +262,13 @@ def main():
             # timeframe filters
             col1, col2 = st.columns([2,1])
             with col2:
-                timeframe = st.selectbox("Timeframe", ['All', 'Last 7 days', 'This month', 'Last 30 days'])
+                timeframe = st.selectbox("Timeframe", ['All', 'Last 7 days', 'This year', 'Last 30 days'])
             df = entries.copy()
             now = pd.Timestamp.now()
             if timeframe == 'Last 7 days':
                 df = df[df['date'] >= now - pd.Timedelta(days=7)]
             elif timeframe == 'This month':
-                df = df[df['date'].dt.month == now.month]
+                df = df[df['date'].dt.year == now.year]
             elif timeframe == 'Last 30 days':
                 df = df[df['date'] >= now - pd.Timedelta(days=30)]
 
