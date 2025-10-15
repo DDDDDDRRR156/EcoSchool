@@ -294,7 +294,8 @@ def main():
             student = st.text_input(loc['student_name'])
             class_name = st.text_input(loc['class_name'])
             date_val = st.date_input(loc['date'], value=date.today())
-            category = st.selectbox(loc['category'], options=list(factors.keys()))
+            category_options = [c for c in factors.keys() if c != "Electricity"]
+            category = st.selectbox(loc['category'], options=category_options)
             qty = st.number_input(loc['quantity'], min_value=0.0, value=0.0, step=0.1)
             unit = st.text_input(loc['unit'], value='units')
             photo = st.file_uploader(loc['photo'], type=['png','jpg','jpeg'])
