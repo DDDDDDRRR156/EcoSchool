@@ -267,10 +267,10 @@ def main():
             now = pd.Timestamp.now()
             if timeframe == 'Last 7 days':
                 df = df[df['date'] >= now - pd.Timedelta(days=7)]
-            elif timeframe == 'This year':
-                df = df[df['date'].dt.year == now.year]
             elif timeframe == 'Last 30 days':
                 df = df[df['date'] >= now - pd.Timedelta(days=30)]
+            elif timeframe == 'This year':
+                df = df[df['date'].dt.year == now.year]
 
             # breakdown
             breakdown = df.groupby('category')['co2'].sum().reset_index()
