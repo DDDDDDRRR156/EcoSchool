@@ -1,71 +1,17 @@
-"""
-EcoSchool — School Carbon Calculator (Streamlit single-file app)
-Filename: EcoSchool_Streamlit_App.py
-"""
-
 import streamlit as st
 import pandas as pd
 import sqlite3
-from datetime import datetime, date, timedelta
-import altair as alt
+from datetime import datetime, date
 
-# -------------------------
-# Constants & Defaults
-# -------------------------
-DB_FILE = "ecoschool.db"
-ADMIN_PASSWORD = "schooladmin"
-DEFAULT_FACTORS = {
-    "Paper (sheets)": 0.005,
-    "Plastic (kg)": 6.0,
-    "Food/Waste (kg)": 3.0,
-    "Transport (km)": 0.21
-}
-
-EQUIVALENTS = {
-    "tree_seedlings_1yr": 21.77,
-    "km_driven_car": 0.21
-}
-
-LOCALES = {
-    "en": {
-        "title": "EcoSchool — School Carbon Calculator",
-        "add_entry": "Add Entry",
-        "dashboard": "Dashboard",
-        "history": "History / Class Feed",
-        "leaderboard": "Challenges / Leaderboard",
-        "settings": "Settings / Admin",
-        "category": "Category",
-        "quantity": "Quantity",
-        "unit": "Unit",
-        "date": "Date",
-        "notes": "Notes (optional)",
-        "submit": "Submit",
-        "verify": "Verify",
-        "export_csv": "Export CSV",
-        "language": "Language",
-        "class_name": "Class / Section",
-        "student_name": "Student Name",
-        "photo": "Photo (optional)",
-        "points": "Points",
-        "badges": "Badges",
-        "admin_login": "Admin Login",
-        "edit_factors": "Edit conversion factors",
-        "save": "Save",
-        "clear_entries": "Clear all entries",
-        "confirm_clear": "⚠️ Are you sure you want to delete all entries? This cannot be undone.",
-        "verify_section": "Verify student entries",
-        "equivalents_note": "💡 *The equivalents below help visualize CO₂ savings — for example, avoiding 21.77 kg CO₂ equals planting one tree seedling for a year, or saving 100 km worth of car travel!*"
-    }
-}
-
-# -------------------------
-# Database helpers
-# -------------------------
+# -----------------
+# Database setup
+# -----------------
+DB_NAME = "eco_school.db"
 
 def init_db():
-    conn = sqlite3.connect(DB_FILE)
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute('''
+    c.execute("""
         CREATE TABLE IF NOT EXISTS entries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp TEXT,
@@ -77,135 +23,161 @@ def init_db():
             unit TEXT,
             photo BLOB,
             notes TEXT,
-            verified INTEGER DEFAULT 0,
-            points INTEGER DEFAULT 0,
+            verified INTEGER,
+            points REAL,
             co2 REAL
         )
-    ''')
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS factors (
-            category TEXT PRIMARY KEY,
-            factor REAL
-        )
-    ''')
-    for cat, f in DEFAULT_FACTORS.items():
-        c.execute('INSERT OR IGNORE INTO factors (category, factor) VALUES (?, ?)', (cat, f))
+    """)
     conn.commit()
     conn.close()
-
-
-def get_factors():
-    conn = sqlite3.connect(DB_FILE)
-    df = pd.read_sql_query('SELECT category, factor FROM factors', conn, index_col='category')
-    conn.close()
-    return df['factor'].to_dict()
-
-
-def set_factor(category, factor):
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute('REPLACE INTO factors (category, factor) VALUES (?, ?)', (category, float(factor)))
-    conn.commit()
-    conn.close()
-
 
 def add_entry_to_db(entry):
-    conn = sqlite3.connect(DB_FILE)
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute('''
+    c.execute("""
         INSERT INTO entries (timestamp, date, student, class_name, category, quantity, unit, photo, notes, verified, points, co2)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (
-        entry['timestamp'], entry['date'], entry['student'], entry['class_name'], entry['category'],
-        entry['quantity'], entry['unit'], entry.get('photo'), entry.get('notes'),
-        entry.get('verified', 0), entry.get('points', 0), entry['co2']
+    """, (
+        entry['timestamp'], entry['date'], entry['student'], entry['class_name'],
+        entry['category'], entry['quantity'], entry['unit'], entry['photo'],
+        entry['notes'], entry['verified'], entry['points'], entry['co2']
     ))
     conn.commit()
     conn.close()
 
-
-def load_entries(only_verified=None):
-    conn = sqlite3.connect(DB_FILE)
-    df = pd.read_sql_query('SELECT * FROM entries ORDER BY timestamp DESC', conn)
+def load_entries_from_db():
+    conn = sqlite3.connect(DB_NAME)
+    df = pd.read_sql_query("SELECT * FROM entries", conn)
     conn.close()
-    if only_verified is not None:
-        df = df[df['verified'] == (1 if only_verified else 0)]
-    if not df.empty:
-        df['date'] = pd.to_datetime(df['date'])
     return df
 
-
-def verify_entry(entry_id):
-    conn = sqlite3.connect(DB_FILE)
+def clear_entries_from_db():
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute('UPDATE entries SET verified=1 WHERE id=?', (entry_id,))
+    c.execute("DELETE FROM entries")
     conn.commit()
     conn.close()
 
+def save_entries_to_csv(df):
+    df.to_csv("eco_entries_saved.csv", index=False)
 
-def clear_all_entries():
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute('DELETE FROM entries')
-    conn.commit()
-    conn.close()
-
-# -------------------------
-# Business logic
-# -------------------------
+# -----------------
+# Conversion Factors
+# -----------------
+factors = {
+    "Paper": 0.004,        # kg CO2 per sheet
+    "Plastic": 2.5,        # kg CO2 per kg
+    "Food/Waste": 1.9,     # kg CO2 per kg
+    "Transport": 0.12      # kg CO2 per km
+}
 
 def compute_co2(category, quantity, factors):
-    factor = factors.get(category, 0)
-    return float(quantity) * float(factor)
-
+    return quantity * factors.get(category, 0)
 
 def points_for_co2(co2):
-    return int(round(max(1, co2 * 2)))
+    return max(0, 100 - co2)
 
+# -----------------
+# Localization
+# -----------------
+LOCALIZATION = {
+    "English": {
+        "dashboard": "Dashboard",
+        "add_entry": "Add Entry",
+        "admin": "Admin Settings",
+        "about": "About",
+        "student_name": "Student Name",
+        "class_name": "Class",
+        "date": "Date",
+        "category": "Category",
+        "quantity": "Quantity",
+        "unit": "Unit",
+        "photo": "Upload Photo (optional)",
+        "notes": "Notes",
+        "submit": "Submit Entry",
+        "equivalents": "CO₂ Equivalents",
+        "nav": "Navigation",
+        "about_text": "EcoSchool helps track your school's environmental footprint.",
+        "clear_entries": "Clear All Entries",
+        "confirm_clear": "I understand this will permanently delete all entries",
+    },
+    "Gujarati": {
+        "dashboard": "ડૅશબોર્ડ",
+        "add_entry": "એન્ટ્રી ઉમેરો",
+        "admin": "એડમિન સેટિંગ્સ",
+        "about": "વિશે",
+        "student_name": "વિદ્યાર્થીનું નામ",
+        "class_name": "વર્ગ",
+        "date": "તારીખ",
+        "category": "વર્ગીકરણ",
+        "quantity": "જથ્થો",
+        "unit": "એકમ",
+        "photo": "ફોટો અપલોડ કરો (વૈકલ્પિક)",
+        "notes": "નોંધો",
+        "submit": "સબમિટ કરો",
+        "equivalents": "CO₂ સમકક્ષ",
+        "nav": "નેવિગેશન",
+        "about_text": "ઇકોસ્કૂલ તમારા શાળાના પર્યાવરણના ફૂટપ્રિન્ટને ટ્રૅક કરવામાં મદદ કરે છે.",
+        "clear_entries": "બધી એન્ટ્રીઓ સાફ કરો",
+        "confirm_clear": "હું સમજું છું કે આ બધા ડેટાને કાયમ માટે કાઢી નાખશે",
+    }
+}
 
-def badge_for_total(total_kg):
-    if total_kg < 5:
-        return "Seedling"
-    if total_kg < 20:
-        return "Green Hero"
-    if total_kg < 50:
-        return "Eco Champion"
-    return "Carbon Star"
-
-# -------------------------
-# Streamlit App
-# -------------------------
-
+# -----------------
+# Main App
+# -----------------
 def main():
-    st.set_page_config(page_title="EcoSchool", layout='wide')
+    st.set_page_config(page_title="EcoSchool App", page_icon="🌿", layout="wide")
     init_db()
-    loc = LOCALES['en']
-    st.title(loc['title'])
 
-    tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['leaderboard'], loc['settings']])
-    factors = get_factors()
+    # Sidebar
+    st.sidebar.title("EcoSchool 🌿")
+    language = st.sidebar.selectbox("Language / ભાષા", ["English", "Gujarati"])
+    loc = LOCALIZATION[language]
+
+    st.sidebar.markdown("---")
+    st.sidebar.write(loc['nav'])
+
+    tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['admin'], loc['about']])
 
     # -----------------
     # Dashboard
     # -----------------
     with tabs[0]:
         st.header(loc['dashboard'])
-        entries = load_entries()
-        if entries.empty:
-            st.info("No entries yet — ask students to add today's activities!")
+        entries_df = load_entries_from_db()
+
+        if not entries_df.empty:
+            total_co2 = entries_df['co2'].sum()
+            total_points = entries_df['points'].sum()
+
+            st.metric("🌍 Total CO₂ Emitted", f"{total_co2:.2f} kg")
+            st.metric("🏅 Total Points", int(total_points))
+
+            st.subheader(loc['equivalents'])
+            st.write("""
+            🌿 These equivalents help you visualize your environmental impact:
+            - 1 kg of CO₂ ≈ driving 4 km  
+            - 1 kg of CO₂ ≈ 122 smartphone charges  
+            - 1 tree absorbs ≈ 21.7 kg CO₂ per year
+            """)
+
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("🚗 Equivalent Car Distance", f"{total_co2 * 4:.1f} km")
+            with col2:
+                st.metric("🔋 Equivalent Phone Charges", f"{total_co2 * 122:.0f} charges")
+            with col3:
+                st.metric("🌳 Equivalent Trees Needed", f"{total_co2 / 21.7:.1f} trees")
+
+            st.bar_chart(entries_df.groupby("category")["co2"].sum())
+
+            st.dataframe(entries_df)
         else:
-            total_co2 = entries['co2'].sum()
-            st.metric("Total emissions (kg CO2)", f"{total_co2:.2f}")
-            breakdown = entries.groupby('category')['co2'].sum().reset_index()
-            chart = alt.Chart(breakdown).mark_bar().encode(
-                x=alt.X('co2:Q', title='kg CO2'),
-                y=alt.Y('category:N', sort='-x', title=None)
-            )
-            st.altair_chart(chart, use_container_width=True)
-            st.markdown(loc['equivalents_note'])   # <--- NEW INFO SECTION
+            st.info("No entries yet. Add some from the 'Add Entry' tab!")
 
     # -----------------
-    # Add entry
+    # Add Entry
     # -----------------
     with tabs[1]:
         st.header(loc['add_entry'])
@@ -214,21 +186,19 @@ def main():
             class_name = st.text_input(loc['class_name'])
             date_val = st.date_input(loc['date'], value=date.today())
 
-            # Remove Electricity
             category_options = [c for c in factors.keys() if c != "Electricity"]
             category = st.selectbox(loc['category'], options=category_options)
 
             qty = st.number_input(loc['quantity'], min_value=0.0, value=0.0, step=0.1)
+            unit = st.selectbox(loc['unit'], options=['kg', 'liters', 'sheets', 'items', 'packets'])
 
-            # --- CHANGED: Dropdown for units
-            unit_options = ['sheets', 'kg', 'litres', 'items', 'km', 'units']
-            unit = st.selectbox(loc['unit'], options=unit_options, index=0)
-
+            photo = st.file_uploader(loc['photo'], type=['png', 'jpg', 'jpeg'])
             notes = st.text_area(loc['notes'])
             submitted = st.form_submit_button(loc['submit'])
 
             if submitted:
                 co2 = compute_co2(category, qty, factors)
+                pts = points_for_co2(co2)
                 entry = {
                     'timestamp': datetime.now().isoformat(),
                     'date': date_val.isoformat(),
@@ -237,48 +207,60 @@ def main():
                     'category': category,
                     'quantity': qty,
                     'unit': unit,
+                    'photo': photo.getvalue() if photo else None,
                     'notes': notes,
                     'verified': 0,
-                    'points': 0,
+                    'points': pts,
                     'co2': co2
                 }
                 add_entry_to_db(entry)
-                st.success(f"Saved — estimated {co2:.2f} kg CO2")
+                st.success(f"✅ Entry saved! Estimated {co2:.2f} kg CO₂.")
+                st.experimental_rerun()
 
     # -----------------
-    # Admin / Settings
+    # Admin Settings
+    # -----------------
+    with tabs[2]:
+        st.header(loc['admin'])
+        df = load_entries_from_db()
+
+        if not df.empty:
+            st.dataframe(df)
+
+            # Save to CSV
+            if st.button("💾 Save Entries to File"):
+                save_entries_to_csv(df)
+                st.success("Entries saved as eco_entries_saved.csv")
+
+            # Download CSV
+            csv = df.to_csv(index=False).encode('utf-8')
+            st.download_button("⬇️ Download data as CSV", data=csv, file_name="eco_entries.csv", mime="text/csv")
+
+            st.markdown("---")
+
+            # Clear Entries Section
+            st.subheader(loc['clear_entries'])
+            confirm = st.checkbox(loc['confirm_clear'])
+            if confirm and st.button("🗑️ Clear All Entries", type="primary"):
+                clear_entries_from_db()
+                st.warning("All entries have been cleared from the database!")
+                st.experimental_rerun()
+        else:
+            st.info("No entries yet!")
+
+    # -----------------
+    # About Tab
     # -----------------
     with tabs[3]:
-        st.header(loc['settings'])
-        pwd = st.text_input("Password", type='password')
-        if pwd == ADMIN_PASSWORD:
-            st.success("Admin authenticated")
+        st.header(loc['about'])
+        st.write(loc['about_text'])
+        st.write("""
+        Developed by students to promote sustainability.  
+        Built with ❤️ using Python and Streamlit.
+        """)
 
-            # Clear entries (fixed)
-            st.subheader(loc['clear_entries'])
-            if 'confirm_clear' not in st.session_state:
-                st.session_state.confirm_clear = False
-
-            if not st.session_state.confirm_clear:
-                if st.button("⚠️ " + loc['clear_entries']):
-                    st.session_state.confirm_clear = True
-                    st.rerun()
-            else:
-                st.warning(loc['confirm_clear'])
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button("✅ Yes, delete all data"):
-                        clear_all_entries()
-                        st.session_state.confirm_clear = False
-                        st.success("All entries cleared successfully!")
-                        st.rerun()
-                with col2:
-                    if st.button("❌ Cancel"):
-                        st.session_state.confirm_clear = False
-                        st.rerun()
-
-        else:
-            st.info("Enter admin password to manage settings")
-
-if __name__ == '__main__':
+# -----------------
+# Run app
+# -----------------
+if __name__ == "__main__":
     main()
