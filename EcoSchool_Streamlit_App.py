@@ -1,7 +1,6 @@
 """
 EcoSchool — School Carbon Calculator (Streamlit single-file app)
 Filename: EcoSchool_Streamlit_App.py
-Blah Blah blah
 """
 
 import streamlit as st
@@ -14,12 +13,12 @@ import altair as alt
 # Constants & Defaults
 # -------------------------
 DB_FILE = "ecoschool.db"
-ADMIN_PASSWORD = "schooladmin"  # change before deployment
+ADMIN_PASSWORD = "schooladmin"
 DEFAULT_FACTORS = {
-    "Paper (sheets)": 0.005,      # kg CO2 per sheet
-    "Plastic (kg)": 6.0,          # kg CO2 per kg plastic
-    "Food/Waste (kg)": 3.0,       # kg CO2 per kg
-    "Transport (km)": 0.21        # kg CO2 per passenger-km (car average)
+    "Paper (sheets)": 0.005,
+    "Plastic (kg)": 6.0,
+    "Food/Waste (kg)": 3.0,
+    "Transport (km)": 0.21
 }
 
 EQUIVALENTS = {
@@ -54,35 +53,8 @@ LOCALES = {
         "save": "Save",
         "clear_entries": "Clear all entries",
         "confirm_clear": "⚠️ Are you sure you want to delete all entries? This cannot be undone.",
-        "verify_section": "Verify student entries"
-    },
-    "gu": {
-        "title": "ઇકોસ્કૂલ — સ્કૂલ કાર્બન કેલ્ક્યુલેટર",
-        "add_entry": "નવો દાખલો ઉમેરો",
-        "dashboard": "ડેશબોર્ડ",
-        "history": "ઇતિહાસ / ક્લાસ ફીડ",
-        "leaderboard": "ચેલેન્જ / લીડર્બોર્ડ",
-        "settings": "સેટિંગ્સ / એડમિન",
-        "category": "શ્રેણી",
-        "quantity": "પરિમાણ",
-        "unit": "એકમ",
-        "date": "તારીખ",
-        "notes": "ટિપ્પણી (વૈકલ્પિક)",
-        "submit": "સબમિટ",
-        "verify": "સત્યાપિત કરો",
-        "export_csv": "સી.એસ.વી. એક્સપોર્ટ",
-        "language": "ભાષા",
-        "class_name": "ક્લાસ / વિભાગ",
-        "student_name": "વિદ્યાર્થીનું નામ",
-        "photo": "ફોટો (વૈકલ્પિક)",
-        "points": "અંક",
-        "badges": "બેજીસ",
-        "admin_login": "એડમિન લોગિન",
-        "edit_factors": "રૂપાંતરણ ફેક્ટર્સ સંપાદિત કરો",
-        "save": "સેવ કરો",
-        "clear_entries": "બધા એન્ટ્રીઓ સાફ કરો",
-        "confirm_clear": "⚠️ શું તમે ખરેખર બધી એન્ટ્રીઓ કાઢી નાખવા માંગો છો?",
-        "verify_section": "વિદ્યાર્થીની એન્ટ્રીઓ સત્યાપિત કરો"
+        "verify_section": "Verify student entries",
+        "equivalents_note": "💡 *The equivalents below help visualize CO₂ savings — for example, avoiding 21.77 kg CO₂ equals planting one tree seedling for a year, or saving 100 km worth of car travel!*"
     }
 }
 
@@ -201,22 +173,13 @@ def badge_for_total(total_kg):
     return "Carbon Star"
 
 # -------------------------
-# UI helpers
-# -------------------------
-
-def sidebar_locale():
-    lang = st.sidebar.selectbox("Language / ભાષા", options=['en', 'gu'],
-                                format_func=lambda x: 'English' if x == 'en' else 'ગુજરાતી')
-    return LOCALES[lang]
-
-# -------------------------
 # Streamlit App
 # -------------------------
 
 def main():
     st.set_page_config(page_title="EcoSchool", layout='wide')
     init_db()
-    loc = sidebar_locale()
+    loc = LOCALES['en']
     st.title(loc['title'])
 
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['leaderboard'], loc['settings']])
@@ -239,6 +202,7 @@ def main():
                 y=alt.Y('category:N', sort='-x', title=None)
             )
             st.altair_chart(chart, use_container_width=True)
+            st.markdown(loc['equivalents_note'])   # <--- NEW INFO SECTION
 
     # -----------------
     # Add entry
@@ -255,7 +219,11 @@ def main():
             category = st.selectbox(loc['category'], options=category_options)
 
             qty = st.number_input(loc['quantity'], min_value=0.0, value=0.0, step=0.1)
-            unit = st.text_input(loc['unit'], value='units')
+
+            # --- CHANGED: Dropdown for units
+            unit_options = ['sheets', 'kg', 'litres', 'items', 'km', 'units']
+            unit = st.selectbox(loc['unit'], options=unit_options, index=0)
+
             notes = st.text_area(loc['notes'])
             submitted = st.form_submit_button(loc['submit'])
 
@@ -278,20 +246,6 @@ def main():
                 st.success(f"Saved — estimated {co2:.2f} kg CO2")
 
     # -----------------
-    # Leaderboard / Challenges
-    # -----------------
-    with tabs[2]:
-        st.header(loc['leaderboard'])
-        entries = load_entries(only_verified=True)
-        if entries.empty:
-            st.info("No verified entries yet — teachers should verify first")
-        else:
-            leaderboard = entries.groupby('class_name').agg({'co2': 'sum'}).reset_index()
-            leaderboard['rank'] = leaderboard['co2'].rank(method='min', ascending=True)
-            leaderboard = leaderboard.sort_values('rank')
-            st.dataframe(leaderboard[['rank', 'class_name', 'co2']].rename(columns={'co2': 'total_kgCO2'}))
-
-    # -----------------
     # Admin / Settings
     # -----------------
     with tabs[3]:
@@ -300,43 +254,28 @@ def main():
         if pwd == ADMIN_PASSWORD:
             st.success("Admin authenticated")
 
-            # Edit factors
-            st.subheader(loc['edit_factors'])
-            factors_df = pd.DataFrame(list(factors.items()), columns=['category', 'factor'])
-            edited = st.data_editor(factors_df, use_container_width=True)
-            if st.button(loc['save']):
-                for _, r in edited.iterrows():
-                    set_factor(r['category'], r['factor'])
-                st.success("Saved factors")
-
-            # Verify entries section
-            st.subheader(loc['verify_section'])
-            entries = load_entries()
-            if entries.empty:
-                st.info("No entries to verify")
-            else:
-                for _, row in entries.iterrows():
-                    cols = st.columns([3, 1])
-                    with cols[0]:
-                        st.write(f"**{row['student']}** — {row['class_name']} — {row['category']} — {row['quantity']} {row['unit']}")
-                        st.write(f"CO2: {row['co2']:.2f} kg")
-                        if row['notes']:
-                            st.write(row['notes'])
-                    with cols[1]:
-                        if row['verified'] == 0:
-                            if st.button(f"{loc['verify']} {int(row['id'])}"):
-                                verify_entry(int(row['id']))
-                                st.rerun()
-                        else:
-                            st.write("✅ Verified")
-
-            # Clear entries
+            # Clear entries (fixed)
             st.subheader(loc['clear_entries'])
-            if st.button("⚠️ " + loc['clear_entries']):
+            if 'confirm_clear' not in st.session_state:
+                st.session_state.confirm_clear = False
+
+            if not st.session_state.confirm_clear:
+                if st.button("⚠️ " + loc['clear_entries']):
+                    st.session_state.confirm_clear = True
+                    st.rerun()
+            else:
                 st.warning(loc['confirm_clear'])
-                if st.button("Yes, delete all data"):
-                    clear_all_entries()
-                    st.success("All entries cleared successfully!")
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("✅ Yes, delete all data"):
+                        clear_all_entries()
+                        st.session_state.confirm_clear = False
+                        st.success("All entries cleared successfully!")
+                        st.rerun()
+                with col2:
+                    if st.button("❌ Cancel"):
+                        st.session_state.confirm_clear = False
+                        st.rerun()
 
         else:
             st.info("Enter admin password to manage settings")
