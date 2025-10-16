@@ -190,7 +190,7 @@ def main():
             category = st.selectbox(loc['category'], options=category_options)
 
             qty = st.number_input(loc['quantity'], min_value=0.0, value=0.0, step=0.1)
-            unit = st.selectbox(loc['unit'], options=['kg', 'liters', 'sheets', 'items', 'packets'])
+            unit = st.selectbox(loc['unit'], options=['kg', 'km', 'sheets', 'items', 'packets'])
 
             photo = st.file_uploader(loc['photo'], type=['png', 'jpg', 'jpeg'])
             notes = st.text_area(loc['notes'])
@@ -215,7 +215,7 @@ def main():
                 }
                 add_entry_to_db(entry)
                 st.success(f"✅ Entry saved! Estimated {co2:.2f} kg CO₂.")
-                st.experimental_rerun()
+                st.rerun()
 
     # -----------------
     # Admin Settings
