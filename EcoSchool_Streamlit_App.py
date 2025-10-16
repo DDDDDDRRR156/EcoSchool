@@ -1,6 +1,7 @@
 """
 EcoSchool — School Carbon Calculator (Streamlit single-file app)
 Filename: EcoSchool_Streamlit_App.py
+Blah Blah blah
 """
 
 import streamlit as st
