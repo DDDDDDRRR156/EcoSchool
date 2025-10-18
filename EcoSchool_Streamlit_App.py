@@ -281,13 +281,14 @@ def main():
                 st.altair_chart(chart, use_container_width=True)
 
             # equivalents
-            st.markdown("""
-### 🌿 Equivalents / સમકક્ષ
-This section shows how your saved CO₂ translates into real-world equivalents — like trees planted, car kilometers avoided, and energy conserved.  
-આ વિભાગ બતાવે છે કે તમે બચાવેલું CO₂ કેવી રીતે વાસ્તવિક સમકક્ષ રૂપમાં પરિવર્તિત થાય છે — જેમ કે વાવેલા વૃક્ષો, બચાવેલા કાર કિલોમીટર્સ, અને બચાવેલી ઊર્જા.
-""")
-            st.write(f"Tree seedlings (10yr eq): {total_co2 / EQUIVALENTS['tree_seedlings_1yr']:.1f}")
-            st.write(f"Car km equivalent: {total_co2 / EQUIVALENTS['km_driven_car']:.1f} km")
+            st.markdown("""### 🌿 Equivalents / સમકક્ષ 
+            This section shows how your saved CO₂ translates into real-world equivalents — like trees planted, car kilometers avoided, and energy conserved.  
+            આ વિભાગ બતાવે છે કે તમે બચાવેલું CO₂ કેવી રીતે વાસ્તવિક સમકક્ષ રૂપમાં પરિવર્તિત થાય છે — જેમ કે વાવેલા વૃક્ષો, બચાવેલા કાર કિલોમીટર્સ, અને બચાવેલી ઊર્જા.
+            """)
+            st.metric("Total CO₂ Saved (kg) / કુલ CO₂ બચાવ (કિલોગ્રામ)", round(total_co2, 2))
+            st.metric("🌳 Trees Planted / વાવવામાં આવેલા વૃક્ષો", round(total_co2 / 21, 2))  # 1 tree ≈ 21 kg CO₂/year
+            st.metric("🚗 Car Kilometers Avoided / ટાળેલા કાર કિલોમીટર", round(total_co2 / 0.120, 2))  # 1 km ≈ 0.120 kg CO₂
+            st.metric("💡 Energy Conserved (kWh) / બચાવેલી ઊર્જા (કિલોવોટ કલાક)", round(total_co2 / 0.92, 2))  # 1 kWh ≈ 0.92 kg CO₂
 
     # -----------------
     # Add entry
