@@ -282,7 +282,11 @@ def main():
 
             # equivalents
             st.subheader("Equivalents")
-            st.write(f"These equivalents show how much of the given metrics are satisfied by the total kg CO2 saved by the school, i.e, how many seedlings need to be planted in 10 years or how far a car would have to travel to consume as much CO2")
+            st.markdown("""
+### 🌿 Equivalents / સમકક્ષ
+This section shows how your saved CO₂ translates into real-world equivalents — like trees planted, car kilometers avoided, and energy conserved.  
+આ વિભાગ બતાવે છે કે તમે બચાવેલું CO₂ કેવી રીતે વાસ્તવિક સમકક્ષ રૂપમાં પરિવર્તિત થાય છે — જેમ કે વાવેલા વૃક્ષો, બચાવેલા કાર કિલોમીટર્સ, અને બચાવેલી ઊર્જા.
+""")
             st.write(f"Tree seedlings (10yr eq): {total_co2 / EQUIVALENTS['tree_seedlings_1yr']:.1f}")
             st.write(f"Car km equivalent: {total_co2 / EQUIVALENTS['km_driven_car']:.1f} km")
 
