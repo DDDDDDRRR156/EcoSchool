@@ -280,6 +280,21 @@ def main():
                 )
                 st.altair_chart(chart, use_container_width=True)
 
+            # Weekly Top 3 Leaderboard (added above Equivalents)
+            st.subheader("🏆 Weekly Top 3 / સાપ્તાહિક ટોપ 3")
+            weekly_entries = load_entries(only_verified=True)
+            if not weekly_entries.empty:
+                weekly_df = weekly_entries[weekly_entries['date'] >= now - pd.Timedelta(days=7)]
+                if not weekly_df.empty:
+                    weekly_leaderboard = weekly_df.groupby(['student', 'class_name']).agg({'co2':'sum'}).reset_index()
+                    weekly_leaderboard = weekly_leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True).head(3)
+                    weekly_leaderboard['rank'] = weekly_leaderboard.index + 1
+                    for _, row in weekly_leaderboard.iterrows():
+                        st.write(f"**{row['rank']}. {row['student']} ({row['class_name']})** — {row['co2']:.2f} kg CO₂ saved")
+                else:
+                    st.info("No verified entries in the last 7 days.")
+
+
             # equivalents
             st.subheader("🌍 Equivalents / સમકક્ષ મૂલ્યો")
             st.metric("🌳 Trees Planted / વાવવામાં આવેલા વૃક્ષો", round(total_co2 / 21, 2))  # 1 tree ≈ 21 kg CO₂/year
