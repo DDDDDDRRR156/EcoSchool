@@ -418,17 +418,19 @@ EcoSchool empowers every student to become a *climate champion*, one action at a
                     return "🌿 Green Hero"
                 else:
                     return "🌱 Seedling"
-            leaderboard['Title'] = leaderboard['rank'].apply(title_for_rank) # Assign titles based on CO₂ saved (lower = better)
-
-            # simple weekly challenge
-            st.subheader('Weekly challenge')
-            week_start = date.today() - timedelta(days=date.today().weekday())
-            st.write(f"Week starting: {week_start}")
-            # compute week totals
-            week_df = entries[entries['date'] >= pd.Timestamp(week_start)]
-            if not week_df.empty:
-                week_board = week_df.groupby('class_name').agg({'co2':'sum'}).reset_index().sort_values('co2')
-                st.table(week_board)
+            leaderboard['Title'] = leaderboard['rank'].apply(title_for_rank)        
+            st.subheader(f"Leaderboard — {timeframe}")
+            st.dataframe(
+                leaderboard[['rank', 'Title', 'student', 'class_name', 'co2']].rename(columns={
+                    'rank': 'Rank',
+                    'student': 'Student',
+                    'class_name': 'Class / Section',
+                    'co2': 'CO₂ Saved (kg)'
+                }).style.background_gradient(subset=['CO₂ Saved (kg)'], cmap='Greens').format({
+                    'CO₂ Saved (kg)': '{:.2f}'
+                }),
+                use_container_width=True
+            )
 
     # -----------------
     # Admin / Settings
