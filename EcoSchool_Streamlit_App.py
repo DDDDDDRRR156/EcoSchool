@@ -281,7 +281,6 @@ def main():
                 st.altair_chart(chart, use_container_width=True)
 
             # equivalents
-            st.subheader("Equivalents")
             st.markdown("""
 ### 🌿 Equivalents / સમકક્ષ
 This section shows how your saved CO₂ translates into real-world equivalents — like trees planted, car kilometers avoided, and energy conserved.  
