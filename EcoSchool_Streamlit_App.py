@@ -406,6 +406,19 @@ EcoSchool empowers every student to become a *climate champion*, one action at a
                 df = df[df['date'] >= now - pd.Timedelta(days=30)]
             elif timeframe == "Last 365 Days":
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
+            leaderboard = df.groupby(['student', 'class_name']).agg({'co2':'sum'}).reset_index()
+            leaderboard = leaderboard.sort_values(by='co2', ascending=True).reset_index(drop=True)
+            leaderboard['rank'] = leaderboard.index + 1
+            def title_for_rank(rank):
+                if rank == 1:
+                    return "🌟 Carbon Star"
+                elif rank <= 3:
+                    return "🥈 Eco Champion"
+                elif rank <= 10:
+                    return "🌿 Green Hero"
+                else:
+                    return "🌱 Seedling"
+            leaderboard['Title'] = leaderboard['rank'].apply(title_for_rank) # Assign titles based on CO₂ saved (lower = better)
 
             # simple weekly challenge
             st.subheader('Weekly challenge')
