@@ -407,7 +407,7 @@ EcoSchool empowers every student to become a *climate champion*, one action at a
             elif timeframe == "Last 365 Days":
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
             leaderboard = df.groupby(['student', 'class_name']).agg({'co2':'sum'}).reset_index()
-            leaderboard = leaderboard.sort_values(by='co2', ascending=True).reset_index(drop=True)
+            leaderboard = leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True)
             leaderboard['rank'] = leaderboard.index + 1
             def title_for_rank(rank):
                 if rank == 1:
