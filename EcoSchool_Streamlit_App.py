@@ -392,16 +392,20 @@ EcoSchool empowers every student to become a *climate champion*, one action at a
     # Leaderboard / Challenges
     # -----------------
     with tabs[3]:
-        st.header(loc['leaderboard'])
+        st.header(loc['leaderboard'])# Timeframe filter
+        timeframe = st.selectbox("Select timeframe", ["All Time", "Last 7 Days", "Last 30 Days", "Last 365 Days"])
         entries = load_entries(only_verified=True)
         if entries.empty:
             st.info("No verified entries yet — teachers should verify first")
         else:
-            leaderboard = entries.groupby('class_name').agg({'co2':'sum'}).reset_index()
-            # Lower emissions is better; show ascending
-            leaderboard['rank'] = leaderboard['co2'].rank(method='min', ascending=True)
-            leaderboard = leaderboard.sort_values('rank')
-            st.dataframe(leaderboard[['rank','class_name','co2']].rename(columns={'co2':'total_kgCO2'}))
+            df = entries.copy()
+            now = pd.Timestamp.now()
+            if timeframe == "Last 7 Days":
+                df = df[df['date'] >= now - pd.Timedelta(days=7)]
+            elif timeframe == "Last 30 Days":
+                df = df[df['date'] >= now - pd.Timedelta(days=30)]
+            elif timeframe == "Last 365 Days":
+                df = df[df['date'] >= now - pd.Timedelta(days=365)]
 
             # simple weekly challenge
             st.subheader('Weekly challenge')
