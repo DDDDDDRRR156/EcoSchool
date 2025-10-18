@@ -296,8 +296,9 @@ def main():
 
 
             # equivalents
-            st.subheader("---
-            🌍 Equivalents / સમકક્ષ મૂલ્યો")
+            st.markdown("""---
+            ###🌍 Equivalents / સમકક્ષ મૂલ્યો 
+            """)
             st.metric("🌳 Trees Planted / વાવવામાં આવેલા વૃક્ષો", round(total_co2 / 21, 2))  # 1 tree ≈ 21 kg CO₂/year
             st.metric("🚗 Car Kilometers Avoided / ટાળેલા કાર કિલોમીટર", round(total_co2 / 0.25, 2))  # 1 km ≈ 0.25 kg CO₂
             st.metric("💡 Energy Conserved (kWh) / બચાવેલી ઊર્જા (કિલોવોટ કલાક)", round(total_co2 / 0.92, 2))  # 1 kWh ≈ 0.92 kg CO₂
