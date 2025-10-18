@@ -299,6 +299,30 @@ def main():
 These values are approximate and meant to help visualize the environmental impact.  
 → *આ મૂલ્યો અંદાજિત છે અને પર્યાવરણ પરના પ્રભાવને સમજવામાં મદદરૂપ છે.*
 """)
+            st.subheader("🏫 About EcoSchool / ઇકોસ્કૂલ વિશે")
+            st.markdown("""
+---
+
+**EcoSchool** (also called *EcoMeter for Schools*) is a simple, interactive platform designed to help students and teachers track and reduce their school's carbon footprint.  
+Through small, everyday actions—like saving paper, reducing waste, or using eco-friendly transport—users can record their contributions and see how they make a difference for the planet.
+
+#### 🌱 What the App Does
+- 📊 **Carbon Calculator:** Converts activities such as paper use, waste, and transport into CO₂ emissions (in kilograms).  
+- 📈 **Dashboard:** Displays total emissions, category-wise breakdown, and real-world equivalents like *trees planted* or *energy conserved*.  
+- 🏆 **Leaderboard:** Encourages friendly competition between classes to promote sustainability.  
+- 🌐 **Multi-language Support:** Available in **English and Gujarati**, making it inclusive for all students.  
+- 📤 **Reports & Admin Tools:** Teachers can verify entries, edit emission factors, and export reports for projects or fairs.
+
+#### 👩‍🏫 User Roles
+- **Students:** Log daily eco-friendly actions and upload evidence.  
+- **Teachers:** Review and verify student submissions.  
+- **Admins:** Manage emission factors, export data, and set sustainability challenges.
+
+EcoSchool empowers every student to become a *climate champion*, one action at a time. 🌍✨  
+
+---
+""")
+
 
 
     # -----------------
