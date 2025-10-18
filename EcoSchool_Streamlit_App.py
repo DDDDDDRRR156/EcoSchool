@@ -299,9 +299,10 @@ def main():
 These values are approximate and meant to help visualize the environmental impact.  
 → *આ મૂલ્યો અંદાજિત છે અને પર્યાવરણ પરના પ્રભાવને સમજવામાં મદદરૂપ છે.*
 """)
-            st.subheader("🏫 About EcoSchool / ઇકોસ્કૂલ વિશે")
             st.markdown("""
 ---
+
+### 🏫 About EcoSchool / ઇકોસ્કૂલ વિશે
 
 **EcoSchool** (also called *EcoMeter for Schools*) is a simple, interactive platform designed to help students and teachers track and reduce their school's carbon footprint.  
 Through small, everyday actions—like saving paper, reducing waste, or using eco-friendly transport—users can record their contributions and see how they make a difference for the planet.
@@ -322,8 +323,6 @@ EcoSchool empowers every student to become a *climate champion*, one action at a
 
 ---
 """)
-
-
 
     # -----------------
     # Add entry
