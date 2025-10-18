@@ -8,7 +8,7 @@ What this is
     streamlit run EcoSchool_Streamlit_App.py
 
 Features implemented
-- Input form for categories: Electricity (kWh), Paper (sheets), Plastic (kg), Food/Waste (kg), Transport (km)
+- Input form for categories: Paper (sheets), Plastic (kg), Food/Waste (kg), Transport (km)
 - Conversion to kg CO2 using editable factor table (persisted in SQLite)
 - Dashboard: totals by day/week/month, pie and bar charts, equivalents (tree seedlings, km driven)
 - Gamification: points, badges, leaderboard (class vs class)
@@ -282,6 +282,7 @@ def main():
 
             # equivalents
             st.subheader("Equivalents")
+            st.write(f"These equivalents show how much of the given metrics are satisfied by the total kg CO2 saved by the school, i.e, how many seedlings need to be planted in 10 years or how far a car would have to travel to consume as much CO2")
             st.write(f"Tree seedlings (10yr eq): {total_co2 / EQUIVALENTS['tree_seedlings_1yr']:.1f}")
             st.write(f"Car km equivalent: {total_co2 / EQUIVALENTS['km_driven_car']:.1f} km")
 
