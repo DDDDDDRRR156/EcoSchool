@@ -239,6 +239,20 @@ def main():
     init_db()
     loc = sidebar_locale()
     st.markdown("""
+<style>
+div[data-testid="stMetricValue"] {
+    font-size: 2.5rem;      /* Adjust number as you like */
+    font-weight: 700;       /* Optional: make it bold */
+    color: #4CAF50;         /* Optional: change text color */
+}
+div[data-testid="stMetricLabel"] {
+    font-size: 1.2rem;      /* Label text */
+    color: #aaa;            /* Optional: label color */
+}
+</style>
+""", unsafe_allow_html=True)
+
+    st.markdown("""
     <style>
     /* FOOTER */
         width: 100%;
