@@ -510,7 +510,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
 # --- Footer ---
 st.markdown("""---""")
 footer_html = f"""
-<div style="background-color:#f0f0f0; padding:20px; border-radius:12px; text-align:center;">
+<footer style="background-color:#f0f0f0; padding:20px; border-radius:12px; text-align:center;">
     <h3 style="margin-bottom:10px; color:#2E8B57;">EcoSchool — Building a Greener Tomorrow 🌿</h3>
     <div style="margin-bottom:15px; font-size:14px; color:#333;">
         <p>© 2025 EcoSchool | <a href="#" style="color:#2E8B57;">Privacy Policy</a> | 
@@ -523,7 +523,7 @@ footer_html = f"""
         <a href="https://www.facebook.com" target="_blank"><img src="facebook.png" alt="Facebook" width="28"></a>
     </div>
     <p style="font-size:13px; color:#555;">Contact: <b>Shaurya Nagar</b> — +91 8780 69 5872</p>
-</div>
+</footer>
 """
 st.markdown(footer_html, unsafe_allow_html=True)
 
