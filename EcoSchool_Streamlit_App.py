@@ -240,6 +240,17 @@ def main():
     loc = sidebar_locale()
     st.markdown("""
 <style>
+/* Increase only the label (text) of st.metric */
+div[data-testid="stMetricLabel"] > p {
+    font-size: 2.4rem;    /* change this value as you like */
+    font-weight: 600;     /* optional: bold */
+    color: #ffffff;       /* optional: adjust color */
+}
+</style>
+""", unsafe_allow_html=True)
+
+    st.markdown("""
+<style>
 div[data-testid="stMetricValue"] {
     font-size: 2.5rem;      /* Adjust number as you like */
     font-weight: 700;       /* Optional: make it bold */
