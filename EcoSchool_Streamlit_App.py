@@ -238,7 +238,35 @@ def main():
     st.set_page_config(page_title="EcoSchool", layout='wide')
     init_db()
     loc = sidebar_locale()
-   
+    t.markdown("""
+    <style>
+    /* FOOTER */
+        width: 100%;
+        background-color: #0E1117;
+        color: #bbb;
+        text-align: center;
+        padding: 0.75rem 0;
+        font-size: 0.9rem;
+        border-top: 1px solid #333;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+    }
+    .eco-footer a {
+        color: #4CAF50;
+        text-decoration: none;
+        margin: 0 8px;
+    }
+    .eco-footer a:hover {
+        text-decoration: underline;
+    }
+    /* Increase font size for st.metric components */
+    .metric-value {
+        font-size: 2em !important;
+    }
+    .metric-label {
+        font-size: 1.2em !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
     st.markdown("""
     <div class="eco-header" style="
