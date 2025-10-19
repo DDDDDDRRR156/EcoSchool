@@ -309,7 +309,7 @@ div[data-testid="stMetricValue"] {
             # compute totals
             total_co2 = entries['co2'].sum()
             st.markdown('<div style="font-size:2.4rem; font-weight:600; color:#4CAF50; margin-bottom:6px;">Total emissions (kg CO2)</div>', unsafe_allow_html=True)
-            st.metric(label="", f"{total_co2:.2f}")
+            st.metric(label="", value=f"{total_co2:.2f}")
 
             # timeframe filters
             col1, col2 = st.columns([2,1])
@@ -355,11 +355,11 @@ div[data-testid="stMetricValue"] {
             </h1>
             """,unsafe_allow_html=True)
             st.markdown('<div style="font-size:2.4rem; font-weight:600; color:#4CAF50; margin-bottom:6px;">🌳 Trees Planted / વાવવામાં આવેલા વૃક્ષો</div>', unsafe_allow_html=True)
-            st.metric(label="", round(total_co2 / 21, 2))  # 1 tree ≈ 21 kg CO₂/year
+            st.metric(label="", value=round(total_co2 / 21, 2))  # 1 tree ≈ 21 kg CO₂/year
             st.markdown('<div style="font-size:2.4rem; font-weight:600; color:#4CAF50; margin-bottom:6px;">🚗 Car Kilometers Avoided / ટાળેલા કાર કિલોમીટર</div>', unsafe_allow_html=True)
-            st.metric(label="", round(total_co2 / 0.25, 2))  # 1 km ≈ 0.25 kg CO₂
+            st.metric(label="", value=round(total_co2 / 0.25, 2))  # 1 km ≈ 0.25 kg CO₂
             st.markdown('<div style="font-size:2.4rem; font-weight:600; color:#4CAF50; margin-bottom:6px;">💡 Energy Conserved (kWh) / બચાવેલી ઊર્જા (કિલોવોટ કલાક)</div>', unsafe_allow_html=True)
-            st.metric(label="", round(total_co2 / 0.92, 2))  # 1 kWh ≈ 0.92 kg CO₂
+            st.metric(label="", value=round(total_co2 / 0.92, 2))  # 1 kWh ≈ 0.92 kg CO₂
             st.markdown("""
 <p style='font-size: 20px;'><b>ℹ️ About these equivalents / આ સમકક્ષ મૂલ્યો વિશે:</b></p>  
 <div style='font-size: 20px;'>- 🌳 1 tree absorbs roughly 21 kg of CO₂ per year. </div>
