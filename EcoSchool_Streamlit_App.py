@@ -34,7 +34,7 @@ Run with:
     streamlit run EcoSchool_Streamlit_App.py
 
 """
-
+import os
 import streamlit as st 
 import pandas as pd 
 import sqlite3
@@ -505,31 +505,28 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
 
         else:
             st.info("Enter admin password to edit factors or export data")
-    st.markdown("""
-<div style="
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #0E1117;
-    color: #bbb;
-    text-align: center;
-    padding: 0.75rem 0;
-    font-size: 0.9rem;
-    border-top: 1px solid #333;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
-">
-    © 2025 EcoSchool | 
-    <a href="#" style="color:#4CAF50;text-decoration:none;">Privacy Policy</a> | 
-    <a href="#" style="color:#4CAF50;text-decoration:none;">Terms of Use</a><br>
-    🌱 "Small Steps, Big Impact" <br>
-    📞 Shaurya Nagar — +91 8780 69 5872 <br>
-    🌐 Follow us: 
-    <a href="#" style="color:#4CAF50;text-decoration:none;">🌎</a> 
-    <a href="#" style="color:#4CAF50;text-decoration:none;">🐦</a> 
-    <a href="#" style="color:#4CAF50;text-decoration:none;">📘</a>
+    import os
+
+# --- Footer ---
+st.markdown("""---""")
+footer_html = f"""
+<div style="background-color:#f0f0f0; padding:20px; border-radius:12px; text-align:center;">
+    <h3 style="margin-bottom:10px; color:#2E8B57;">EcoSchool — Building a Greener Tomorrow 🌿</h3>
+    <div style="margin-bottom:15px; font-size:14px; color:#333;">
+        <p>© 2025 EcoSchool | <a href="#" style="color:#2E8B57;">Privacy Policy</a> | 
+        <a href="#" style="color:#2E8B57;">Terms of Use</a></p>
+    </div>
+    <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin-bottom:15px;">
+        <a href="tel:+918780695872" target="_blank"><img src="phone.png" alt="Phone" width="28"></a>
+        <a href="mailto:shauryanagar@gmail.com" target="_blank"><img src="email.png" alt="Email" width="28"></a>
+        <a href="https://www.instagram.com" target="_blank"><img src="instagram.png" alt="Instagram" width="28"></a>
+        <a href="https://www.facebook.com" target="_blank"><img src="facebook.png" alt="Facebook" width="28"></a>
+    </div>
+    <p style="font-size:13px; color:#555;">Contact: <b>Shaurya Nagar</b> — +91 8780 69 5872</p>
 </div>
-""", unsafe_allow_html=True)
+"""
+st.markdown(footer_html, unsafe_allow_html=True)
+
 
 
 
