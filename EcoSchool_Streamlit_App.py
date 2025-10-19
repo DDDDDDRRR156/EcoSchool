@@ -236,7 +236,6 @@ def sidebar_locale():
 # -------------------------
 
 def main():
-    st.set_page_config(page_title="EcoSchool", layout='wide')
     init_db()
     loc = sidebar_locale()
     st.title(loc['title'])
@@ -312,7 +311,7 @@ def main():
     </style>
 
     <!-- Header -->
-    <div class="eco-header">🌍 EcoSchool — School Carbon Calculator</div>
+    <div class="eco-header">🌿EcoSchool — School Carbon Calculator</div>
 
     <!-- Navbar -->
     <div class="eco-navbar">
