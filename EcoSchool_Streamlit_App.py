@@ -241,6 +241,49 @@ def main():
     loc = sidebar_locale()
     st.title(loc['title'])
 
+    # Sticky Header with App Name and Navigation
+    st.markdown("""
+    <style>
+    .sticky-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: white;
+        z-index: 1000;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        border-bottom: 1px solid #ddd;
+    }
+    .sticky-nav {
+        position: fixed;
+        top: 60px;  /* Adjust based on header height */
+        left: 0;
+        width: 100%;
+        background-color: white;
+        z-index: 999;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .main-content {
+        margin-top: 120px;  /* Adjust to account for header and nav */
+    }
+    </style>
+    <div class="sticky-header">
+        <h1 style="margin: 0; color: #2E8B57;">{}</h1>
+    </div>
+    <div class="sticky-nav">
+        <div style="display: flex; justify-content: space-around;">
+            <a href="#dashboard" style="text-decoration: none; color: #2E8B57; font-weight: bold;">{}</a>
+            <a href="#add_entry" style="text-decoration: none; color: #2E8B57; font-weight: bold;">{}</a>
+            <a href="#history" style="text-decoration: none; color: #2E8B57; font-weight: bold;">{}</a>
+            <a href="#leaderboard" style="text-decoration: none; color: #2E8B57; font-weight: bold;">{}</a>
+            <a href="#settings" style="text-decoration: none; color: #2E8B57; font-weight: bold;">{}</a>
+        </div>
+    </div>
+    <div class="main-content">
+    """.format(loc['title'], loc['dashboard'], loc['add_entry'], loc['history'], loc['leaderboard'], loc['settings']), unsafe_allow_html=True)
+
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['history'], loc['leaderboard'], loc['settings']])
 
     factors = get_factors()
