@@ -489,8 +489,8 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                             if st.button(f"{loc['verify']} {int(row['id'])}"):
                                 verify_entry(int(row['id']))
                                 st.rerun()
-                            else:
-                                st.write("✅ Verified")
+                        else:
+                            st.write("✅ Verified")
             st.subheader(loc['edit_factors'])
             factors_df = pd.DataFrame(list(factors.items()), columns=['category','factor'])
             edited = st.data_editor(
