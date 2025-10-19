@@ -205,7 +205,12 @@ def verify_entry(entry_id):
     c.execute('UPDATE entries SET verified=1 WHERE id=?', (entry_id,))
     conn.commit()
     conn.close()
-
+def clear_all_entries():
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute('DELETE FROM entries')
+    conn.commit()
+    conn.close()
 # -------------------------
 # Business logic
 # -------------------------
