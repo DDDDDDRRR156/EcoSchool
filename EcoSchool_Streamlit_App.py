@@ -234,7 +234,6 @@ def sidebar_locale():
 # -------------------------
 # Streamlit App
 # -------------------------
-
 def main():
     st.set_page_config(page_title="EcoSchool", layout='wide')
     init_db()
@@ -252,8 +251,8 @@ def main():
         top: 0;
         left: 0;
         width: 100%;
-        background-color: #0E1117;
-        color: white;
+        background-color: white;  /* Changed to white for visibility */
+        color: black;  /* Changed to black for contrast */
         text-align: center;
         font-size: 1.8rem;
         font-weight: 700;
@@ -293,6 +292,7 @@ def main():
         🌍 EcoSchool — School Carbon Calculator
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
