@@ -304,7 +304,7 @@ def main():
                     weekly_leaderboard = weekly_leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True).head(3)
                     weekly_leaderboard['rank'] = weekly_leaderboard.index + 1
                     for _, row in weekly_leaderboard.iterrows():
-                        st.markdown(f"<p style='font-size: 48px;'><strong>{row['rank']}. {row['student']} ({row['class_name']})</strong> — {row['co2']:.2f} kg CO₂ saved</p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='font-size: 30px;'><strong>{row['rank']}. {row['student']} ({row['class_name']})</strong> — {row['co2']:.2f} kg CO₂ saved</p>", unsafe_allow_html=True)
                 else:
                     st.info("No verified entries in the last 7 days.")
             else:
@@ -328,32 +328,28 @@ def main():
   <div>→ 1 કિલોવોટ કલાક વીજળીના ઉપયોગથી આશરે 0.92 કિલોગ્રામ CO₂ ઉત્પન્ન થાય છે.</div><br>
 <p>These values are approximate and meant to help visualize the environmental impact.  
 → આ મૂલ્યો અંદાજિત છે અને પર્યાવરણ પરના પ્રભાવને સમજવામાં મદદરૂપ છે.</p>
+""", unsafe_allow_html=True)
+            st.markdown("""<hr>
+<h1> 🏫 About EcoSchool / ઇકોસ્કૂલ વિશે </h1>
+
+<p style='font-size: 30px;'><b>EcoSchool</b>(also called *EcoMeter for Schools*) is a simple, interactive platform designed to help students and teachers track and reduce their school's carbon footprint.  
+Through small, everyday actions—like saving paper, reducing waste, or using eco-friendly transport—users can record their contributions and see how they make a difference for the planet.</p>
+
+<h2>🌱 What the App Does</h2>
+<div style='font-size: 30px;'>- <b>📊 Carbon Calculator:</b> Converts activities such as paper use, waste, and transport into CO₂ emissions (in kilograms).  
+<div style='font-size: 30px;'>- <b>📈 Dashboard:</b> Displays total emissions, category-wise breakdown, and real-world equivalents like <i>trees planted</i> or <i>energy conserved</i>.  
+<div style='font-size: 30px;'>- <b>🏆 Leaderboard:</b> Encourages friendly competition between classes to promote sustainability.  
+<div style='font-size: 30px;'>- <b>🌐 Multi-language Support:</b> Available in <b>English and Gujarati</b>, making it inclusive for all students.  
+<div style='font-size: 30px;'>- <b>📤 Reports & Admin Tools:</b> Teachers can verify entries, edit emission factors, and export reports for projects or fairs.
+
+<h2>👩‍🏫 User Roles</h2>
+<div style='font-size: 30px;'>- <b>Students:</b> Log daily eco-friendly actions and upload evidence. </div> 
+<div style='font-size: 30px;'>- <b>Teachers:</b> Review and verify student submissions.  </div>
+<div style='font-size: 30px;'>- <b>Admins:</b> Manage emission factors, export data, and set sustainability challenges.</div>
+
+<h3>EcoSchool empowers every student to become a *climate champion*, one action at a time. 🌍✨</h3>
 <hr>
 """, unsafe_allow_html=True)
-            st.markdown("""
----
-
-### 🏫 About EcoSchool / ઇકોસ્કૂલ વિશે
-
-**EcoSchool** (also called *EcoMeter for Schools*) is a simple, interactive platform designed to help students and teachers track and reduce their school's carbon footprint.  
-Through small, everyday actions—like saving paper, reducing waste, or using eco-friendly transport—users can record their contributions and see how they make a difference for the planet.
-
-#### 🌱 What the App Does
-- 📊 **Carbon Calculator:** Converts activities such as paper use, waste, and transport into CO₂ emissions (in kilograms).  
-- 📈 **Dashboard:** Displays total emissions, category-wise breakdown, and real-world equivalents like *trees planted* or *energy conserved*.  
-- 🏆 **Leaderboard:** Encourages friendly competition between classes to promote sustainability.  
-- 🌐 **Multi-language Support:** Available in **English and Gujarati**, making it inclusive for all students.  
-- 📤 **Reports & Admin Tools:** Teachers can verify entries, edit emission factors, and export reports for projects or fairs.
-
-#### 👩‍🏫 User Roles
-- **Students:** Log daily eco-friendly actions and upload evidence.  
-- **Teachers:** Review and verify student submissions.  
-- **Admins:** Manage emission factors, export data, and set sustainability challenges.
-
-EcoSchool empowers every student to become a *climate champion*, one action at a time. 🌍✨  
-
----
-""")
 
     # -----------------
     # Add entry
