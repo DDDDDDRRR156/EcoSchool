@@ -464,18 +464,14 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                 }),
                 use_container_width=True
             )
-
-# -----------------
-# Admin / Settings
-# -----------------
-with tabs[3]:
-    st.header(loc['settings'])
-    st.subheader(loc['admin_login'])
-    pwd = st.text_input("Password", type='password')
-    if pwd == ADMIN_PASSWORD:
-        st.success("Admin authenticated")
-
-        # Moved History / Teacher review section here
+            # -----------------# Admin / Settings# -----------------
+    with tabs[3]:
+        st.header(loc['settings'])
+        st.subheader(loc['admin_login'])
+        pwd = st.text_input("Password", type='password')
+        if pwd == ADMIN_PASSWORD:
+            st.success("Admin authenticated")
+            # Moved History / Teacher review section here
         st.subheader(loc['history'])
         entries = load_entries()
         if entries.empty:
