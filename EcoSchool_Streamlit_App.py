@@ -248,7 +248,7 @@ def main():
     background-color: #0E1117;
     color: white;
     text-align: center;
-    font-size: 0.3rem;
+    font-size: 3rem;
     font-weight: 700;
     padding: 1rem 0;
     z-index: 9999;
