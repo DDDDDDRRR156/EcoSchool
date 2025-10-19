@@ -304,11 +304,11 @@ def main():
                     weekly_leaderboard = weekly_leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True).head(3)
                     weekly_leaderboard['rank'] = weekly_leaderboard.index + 1
                     for _, row in weekly_leaderboard.iterrows():
-                        st.write(f"**{row['rank']}. {row['student']} ({row['class_name']})** — {row['co2']:.2f} kg CO₂ saved")
+                        st.markdown(f"<p style='font-size: 18px;'><strong>{row['rank']}. {row['student']} ({row['class_name']})</strong> — {row['co2']:.2f} kg CO₂ saved</p>", unsafe_allow_html=True)
                 else:
                     st.info("No verified entries in the last 7 days.")
-
-
+            else:
+                st.info("No verified entries yet.")
             # equivalents
             st.markdown("""<hr>
             <h1>
