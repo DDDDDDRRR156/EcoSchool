@@ -242,51 +242,29 @@ def main():
     st.title(loc['title'])
     st.markdown("""
     <style>
-    /* Main page adjustments */
     .block-container {
-        padding-top: 6rem;
-        padding-bottom: 5rem;
+        padding-top: 6.5rem !important;
+        padding-bottom: 5rem !important;
     }
 
-    /* Sticky header */
+    /* HEADER */
     .eco-header {
         position: fixed;
         top: 0;
+        left: 0;
         width: 100%;
         background-color: #0E1117;
         color: white;
         text-align: center;
         font-size: 1.8rem;
-        font-weight: bold;
+        font-weight: 700;
         padding: 1rem 0;
         z-index: 9999;
         border-bottom: 2px solid #4CAF50;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
-    /* Sticky navbar */
-    .eco-navbar {
-        position: fixed;
-        top: 3.8rem;
-        width: 100%;
-        background-color: #161B22;
-        text-align: center;
-        z-index: 9998;
-        border-bottom: 1px solid #333;
-    }
-
-    .eco-navbar a {
-        display: inline-block;
-        color: #ccc;
-        padding: 0.75rem 1.5rem;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-
-    .eco-navbar a:hover {
-        color: #4CAF50;
-    }
-
-    /* Footer styling */
+    /* FOOTER */
     .eco-footer {
         position: fixed;
         bottom: 0;
@@ -298,6 +276,7 @@ def main():
         padding: 0.75rem 0;
         font-size: 0.9rem;
         border-top: 1px solid #333;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
     }
 
     .eco-footer a {
@@ -311,18 +290,11 @@ def main():
     }
     </style>
 
-    <!-- Header -->
-    <div class="eco-header">🌿EcoSchool — School Carbon Calculator</div>
-
-    <!-- Navbar -->
-    <div class="eco-navbar">
-        <a href="#dashboard">Dashboard</a>
-        <a href="#add-entry">Add Entry</a>
-        <a href="#history">History / Class Feed</a>
-        <a href="#leaderboard">Leaderboard</a>
-        <a href="#settings">Admin Settings</a>
+    <div class="eco-header">
+        🌍 EcoSchool — School Carbon Calculator
     </div>
 """, unsafe_allow_html=True)
+
 
 
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['history'], loc['leaderboard'], loc['settings']])
