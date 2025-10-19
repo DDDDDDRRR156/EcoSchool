@@ -238,56 +238,7 @@ def main():
     st.set_page_config(page_title="EcoSchool", layout='wide')
     init_db()
     loc = sidebar_locale()
-    st.markdown("""
-    <style>
-    .block-container {
-        padding-top: 100 rem !important;
-        padding-bottom: 500rem !important;
-    }
-
-    /* HEADER */
-    .eco-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: white;  /* Changed to white for visibility */
-        color: black;  /* Changed to black for contrast */
-        text-align: center;
-        font-size: 1.8rem;
-        font-weight: 700;
-        padding: 1rem 0;
-        z-index: 9999;
-        border-bottom: 2px solid #4CAF50;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    }
-
-    /* FOOTER */
-    .eco-footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #0E1117;
-        color: #bbb;
-        text-align: center;
-        padding: 0.75rem 0;
-        font-size: 0.9rem;
-        border-top: 1px solid #333;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
-    }
-
-    .eco-footer a {
-        color: #4CAF50;
-        text-decoration: none;
-        margin: 0 8px;
-    }
-
-    .eco-footer a:hover {
-        text-decoration: underline;
-    }
-    </style>
-""", unsafe_allow_html=True)
+   
 
     st.markdown("""
     <div class="eco-header">
