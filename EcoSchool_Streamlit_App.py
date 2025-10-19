@@ -374,43 +374,52 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
 <hr>
 """, unsafe_allow_html=True)
 
-    # -----------------
+        # -----------------
     # Add entry
     # -----------------
     with tabs[1]:
         st.header(loc['add_entry'])
         with st.form("entry_form"):
-            student = st.text_input(loc['student_name'])
-            class_name = st.text_input(loc['class_name'])
+            student = st.text_input(loc['student_name'] + " *", value="")
+            class_name = st.text_input(loc['class_name'] + " *", value="")
             date_val = st.date_input(loc['date'], value=date.today())
             category_options = [c for c in factors.keys() if c != "Electricity"]
             category = st.selectbox(loc['category'], options=category_options)
-            qty = st.number_input(loc['quantity'], min_value=0.0, value=0.0, step=0.1)
+            qty = st.number_input(loc['quantity'] + " *", min_value=0.0, value=0.0, step=0.1)
             unit = st.selectbox(loc['unit'], options=['sheets', 'kg', 'km', 'items'])
             photo = st.file_uploader(loc['photo'], type=['png','jpg','jpeg'])
             notes = st.text_area(loc['notes'])
             submitted = st.form_submit_button(loc['submit'])
 
             if submitted:
-                # compute co2
-                co2 = compute_co2(category, qty, factors)
-                pts = points_for_co2(co2)
-                entry = {
-                    'timestamp': datetime.now().isoformat(),
-                    'date': date_val.isoformat(),
-                    'student': student,
-                    'class_name': class_name,
-                    'category': category,
-                    'quantity': qty,
-                    'unit': unit,
-                    'photo': photo.getvalue() if photo else None,
-                    'notes': notes,
-                    'verified': 0,
-                    'points': 0,
-                    'co2': co2
-                }
-                add_entry_to_db(entry)
-                st.success(f"Saved — estimated {co2:.2f} kg CO2")
+                # Validation for required fields
+                if not student.strip():
+                    st.error("Student name is required.")
+                elif not class_name.strip():
+                    st.error("Class/Section is required.")
+                elif qty <= 0:
+                    st.error("Quantity must be greater than 0.")
+                else:
+                    # compute co2
+                    co2 = compute_co2(category, qty, factors)
+                    pts = points_for_co2(co2)
+                    entry = {
+                        'timestamp': datetime.now().isoformat(),
+                        'date': date_val.isoformat(),
+                        'student': student,
+                        'class_name': class_name,
+                        'category': category,
+                        'quantity': qty,
+                        'unit': unit,
+                        'photo': photo.getvalue() if photo else None,
+                        'notes': notes,
+                        'verified': 0,
+                        'points': 0,
+                        'co2': co2
+                    }
+                    add_entry_to_db(entry)
+                    st.success(f"Saved — estimated {co2:.2f} kg CO2")
+
 
     # -----------------
     # History / Teacher review
