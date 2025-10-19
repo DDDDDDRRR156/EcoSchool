@@ -319,14 +319,14 @@ def main():
             st.metric("🚗 Car Kilometers Avoided / ટાળેલા કાર કિલોમીટર", round(total_co2 / 0.25, 2))  # 1 km ≈ 0.25 kg CO₂
             st.metric("💡 Energy Conserved (kWh) / બચાવેલી ઊર્જા (કિલોવોટ કલાક)", round(total_co2 / 0.92, 2))  # 1 kWh ≈ 0.92 kg CO₂
             st.markdown("""
-<p><b>ℹ️ About these equivalents / આ સમકક્ષ મૂલ્યો વિશે:</b></p>  
-<div>- 🌳 1 tree absorbs roughly 21 kg of CO₂ per year. </div>
-  <div>→ 1 વૃક્ષ દર વર્ષે આશરે 21 કિલોગ્રામ CO₂ શોષી લે છે.</div>
-<div>- 🚗 Driving 1 km in an average petrol car emits about 0.25 kg of CO₂. </div>
-  <div>→ સરેરાશ પેટ્રોલ કાર 1 કિ.મી. દોડે ત્યારે આશરે 0.25 કિલોગ્રામ CO₂ ઉત્સર્જિત કરે છે.</div>
-<div>- 💡 Using 1 kWh of electricity produces around 0.92 kg of CO₂.  </div>
-  <div>→ 1 કિલોવોટ કલાક વીજળીના ઉપયોગથી આશરે 0.92 કિલોગ્રામ CO₂ ઉત્પન્ન થાય છે.</div><br>
-<p>These values are approximate and meant to help visualize the environmental impact.  
+<p style='font-size: 20px;'><b>ℹ️ About these equivalents / આ સમકક્ષ મૂલ્યો વિશે:</b></p>  
+<div style='font-size: 20px;'>- 🌳 1 tree absorbs roughly 21 kg of CO₂ per year. </div>
+  <div style='font-size: 20px;'>→ 1 વૃક્ષ દર વર્ષે આશરે 21 કિલોગ્રામ CO₂ શોષી લે છે.</div>
+<div style='font-size: 20px;'>- 🚗 Driving 1 km in an average petrol car emits about 0.25 kg of CO₂. </div>
+  <div style='font-size: 20px;'>→ સરેરાશ પેટ્રોલ કાર 1 કિ.મી. દોડે ત્યારે આશરે 0.25 કિલોગ્રામ CO₂ ઉત્સર્જિત કરે છે.</div>
+<div style='font-size: 20px;'>- 💡 Using 1 kWh of electricity produces around 0.92 kg of CO₂.  </div>
+  <div style='font-size: 20px;'>→ 1 કિલોવોટ કલાક વીજળીના ઉપયોગથી આશરે 0.92 કિલોગ્રામ CO₂ ઉત્પન્ન થાય છે.</div><br>
+<p style='font-size: 20px;'>These values are approximate and meant to help visualize the environmental impact.  
 → આ મૂલ્યો અંદાજિત છે અને પર્યાવરણ પરના પ્રભાવને સમજવામાં મદદરૂપ છે.</p>
 """, unsafe_allow_html=True)
             st.markdown("""<hr>
@@ -347,7 +347,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
 <div style='font-size: 20px;'>- <b>Teachers:</b> Review and verify student submissions.  </div>
 <div style='font-size: 20px;'>- <b>Admins:</b> Manage emission factors, export data, and set sustainability challenges.</div>
 
-<h2>EcoSchool empowers every student to become a *climate champion*, one action at a time. 🌍✨</h2>
+<h2>EcoSchool empowers every student to become a <i>climate champion</i>, one action at a time. 🌍✨</h2>
 <hr>
 """, unsafe_allow_html=True)
 
