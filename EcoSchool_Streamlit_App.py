@@ -244,84 +244,7 @@ def main():
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['history'], loc['leaderboard'], loc['settings']])
 
     factors = get_factors()
-st.markdown("""
-    <style>
-    .block-container {
-        padding-top: 7rem;
-        padding-bottom: 5rem;
-    }
-
-    .eco-header {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        background-color: #0E1117;
-        color: white;
-        text-align: center;
-        font-size: 1.8rem;
-        font-weight: 700;
-        padding: 1rem 0;
-        z-index: 9999;
-        border-bottom: 2px solid #4CAF50;
-    }
-
-    .eco-navbar {
-        position: fixed;
-        top: 3.8rem;
-        width: 100%;
-        background-color: #161B22;
-        text-align: center;
-        z-index: 9998;
-        border-bottom: 1px solid #333;
-    }
-
-    .eco-navbar a {
-        display: inline-block;
-        color: #ccc;
-        padding: 0.75rem 1.5rem;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .eco-navbar a:hover {
-        color: #4CAF50;
-    }
-
-    .eco-footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #0E1117;
-        color: #bbb;
-        text-align: center;
-        padding: 0.75rem 0;
-        font-size: 0.9rem;
-        border-top: 1px solid #333;
-    }
-
-    .eco-footer a {
-        color: #4CAF50;
-        text-decoration: none;
-        margin: 0 8px;
-    }
-
-    .eco-footer a:hover {
-        text-decoration: underline;
-    }
-    </style>
-
-    <div class="eco-header">🌍 EcoSchool — School Carbon Calculator</div>
-
-    <div class="eco-navbar">
-        <a href="#dashboard">Dashboard</a>
-        <a href="#add-entry">Add Entry</a>
-        <a href="#history">History / Class Feed</a>
-        <a href="#leaderboard">Leaderboard</a>
-        <a href="#settings">Admin Settings</a>
-    </div>
-""", unsafe_allow_html=True)
-with tabs[0]:
+    with tabs[0]:
         st.header(loc['dashboard'])
         entries = load_entries()
         if entries.empty:
@@ -417,7 +340,7 @@ EcoSchool empowers every student to become a *climate champion*, one action at a
     # -----------------
     # Add entry
     # -----------------
-with tabs[1]:
+    with tabs[1]:
         st.header(loc['add_entry'])
         with st.form("entry_form"):
             student = st.text_input(loc['student_name'])
@@ -455,7 +378,7 @@ with tabs[1]:
     # -----------------
     # History / Teacher review
     # -----------------
-with tabs[2]:
+    with tabs[2]:
         st.header(loc['history'])
         entries = load_entries()
         if entries.empty:
@@ -481,7 +404,7 @@ with tabs[2]:
     # -----------------
     # Leaderboard / Challenges
     # -----------------
-with tabs[3]:
+    with tabs[3]:
         st.header(loc['leaderboard'])# Timeframe filter
         timeframe = st.selectbox("Select timeframe", ["All Time", "Last 7 Days", "Last 30 Days", "Last 365 Days"])
         entries = load_entries(only_verified=True)
@@ -525,7 +448,7 @@ with tabs[3]:
     # -----------------
     # Admin / Settings
     # -----------------
-with tabs[4]:
+    with tabs[4]:
         st.header(loc['settings'])
         st.subheader(loc['admin_login'])
         pwd = st.text_input("Password", type='password')
