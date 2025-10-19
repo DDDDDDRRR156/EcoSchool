@@ -238,7 +238,7 @@ def main():
     st.set_page_config(page_title="EcoSchool", layout='wide')
     init_db()
     loc = sidebar_locale()
-    t.markdown("""
+    st.markdown("""
     <style>
     /* FOOTER */
         width: 100%;
