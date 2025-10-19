@@ -240,11 +240,22 @@ def main():
     loc = sidebar_locale()
     st.markdown("""
 <style>
-/* Increase only the label (text) of st.metric */
-div[data-testid="stMetricLabel"] > p {
-    font-size: 2.4rem;    /* change this value as you like */
-    font-weight: 600;     /* optional: bold */
-    color: #ffffff;       /* optional: adjust color */
+/* Try a few selector variants and force the label style */
+div[data-testid="stMetricLabel"], 
+div[data-testid="stMetricLabel"] p, 
+div[data-testid="stMetricLabel"] span,
+div[data-testid="stMetric"] .stMetricLabel, 
+div[data-testid="stMetric"] .stMetricLabel p {
+  font-size: 1.4rem !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+}
+
+/* (optional) keep value large but balanced */
+div[data-testid="stMetricValue"], 
+div[data-testid="stMetricValue"] p {
+  font-size: 2.4rem !important;
+  font-weight: 700 !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -256,13 +267,8 @@ div[data-testid="stMetricValue"] {
     font-weight: 700;       /* Optional: make it bold */
     color: #4CAF50;         /* Optional: change text color */
 }
-div[data-testid="stMetricLabel"] {
-    font-size: 2.4rem;      /* Label text */
-    color: #4CAF50;            /* Optional: label color */
-}
 </style>
 """, unsafe_allow_html=True)
-
     st.markdown("""
     <style>
     /* FOOTER */
@@ -282,13 +288,6 @@ div[data-testid="stMetricLabel"] {
     }
     .eco-footer a:hover {
         text-decoration: underline;
-    }
-    /* Increase font size for st.metric components */
-    .metric-value {
-        font-size: 2rem !important;
-    }
-    .metric-label {
-        font-size: 2rem !important;
     }
     </style>
 """, unsafe_allow_html=True)
