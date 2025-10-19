@@ -241,7 +241,20 @@ def main():
    
 
     st.markdown("""
-    <div class="eco-header">
+    <div class="eco-header" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #0E1117;
+    color: white;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    padding: 1rem 0;
+    z-index: 9999;
+    border-bottom: 2px solid #4CAF50;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
         🌍 EcoSchool — School Carbon Calculator
     </div>""", unsafe_allow_html=True)
     
