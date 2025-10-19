@@ -246,8 +246,8 @@ div[data-testid="stMetricValue"] {
     color: #4CAF50;         /* Optional: change text color */
 }
 div[data-testid="stMetricLabel"] {
-    font-size: 1.2rem;      /* Label text */
-    color: #aaa;            /* Optional: label color */
+    font-size: 2.4rem;      /* Label text */
+    color: #4CAF50;            /* Optional: label color */
 }
 </style>
 """, unsafe_allow_html=True)
