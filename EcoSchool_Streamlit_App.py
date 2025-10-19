@@ -511,9 +511,8 @@ disabled=False
         if not all_entries.empty:
             csv = all_entries.to_csv(index=False)
             st.download_button("Download CSV", data=csv, file_name='ecoschool_entries.csv', mime='text/csv')
-
-    else:
-        st.info("Enter admin password to edit factors or export data")
+        else:
+            st.info("Enter admin password to edit factors or export data")
 
 # --- Sticky Footer ---
 footer_html = """
