@@ -256,29 +256,6 @@ div[data-testid="stMetricValue"] {
 </style>
 """, unsafe_allow_html=True)
     st.markdown("""
-    <style>
-    /* FOOTER */
-        width: 100%;
-        background-color: #0E1117;
-        color: #bbb;
-        text-align: center;
-        padding: 0.75rem 0;
-        font-size: 0.9rem;
-        border-top: 1px solid #333;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
-    }
-    .eco-footer a {
-        color: #4CAF50;
-        text-decoration: none;
-        margin: 0 8px;
-    }
-    .eco-footer a:hover {
-        text-decoration: underline;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-    st.markdown("""
     <div class="eco-header" style="
     top: 0;
     left: 0;
@@ -295,8 +272,6 @@ div[data-testid="stMetricValue"] {
         🌍 EcoSchool — School Carbon Calculator
     </div>""", unsafe_allow_html=True)
     
-
-
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['history'], loc['leaderboard'], loc['settings']])
 
     factors = get_factors()
@@ -530,6 +505,32 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
 
         else:
             st.info("Enter admin password to edit factors or export data")
+    st.markdown("""
+<div style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #0E1117;
+    color: #bbb;
+    text-align: center;
+    padding: 0.75rem 0;
+    font-size: 0.9rem;
+    border-top: 1px solid #333;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+">
+    © 2025 EcoSchool | 
+    <a href="#" style="color:#4CAF50;text-decoration:none;">Privacy Policy</a> | 
+    <a href="#" style="color:#4CAF50;text-decoration:none;">Terms of Use</a><br>
+    🌱 "Small Steps, Big Impact" <br>
+    📞 Shaurya Nagar — +91 8780 69 5872 <br>
+    🌐 Follow us: 
+    <a href="#" style="color:#4CAF50;text-decoration:none;">🌎</a> 
+    <a href="#" style="color:#4CAF50;text-decoration:none;">🐦</a> 
+    <a href="#" style="color:#4CAF50;text-decoration:none;">📘</a>
+</div>
+""", unsafe_allow_html=True)
+
 
 
 if __name__ == '__main__':
