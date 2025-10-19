@@ -417,7 +417,7 @@ EcoSchool empowers every student to become a *climate champion*, one action at a
     # -----------------
     # Add entry
     # -----------------
-    with tabs[1]:
+with tabs[1]:
         st.header(loc['add_entry'])
         with st.form("entry_form"):
             student = st.text_input(loc['student_name'])
@@ -455,7 +455,7 @@ EcoSchool empowers every student to become a *climate champion*, one action at a
     # -----------------
     # History / Teacher review
     # -----------------
-    with tabs[2]:
+with tabs[2]:
         st.header(loc['history'])
         entries = load_entries()
         if entries.empty:
@@ -481,7 +481,7 @@ EcoSchool empowers every student to become a *climate champion*, one action at a
     # -----------------
     # Leaderboard / Challenges
     # -----------------
-    with tabs[3]:
+with tabs[3]:
         st.header(loc['leaderboard'])# Timeframe filter
         timeframe = st.selectbox("Select timeframe", ["All Time", "Last 7 Days", "Last 30 Days", "Last 365 Days"])
         entries = load_entries(only_verified=True)
@@ -525,7 +525,7 @@ EcoSchool empowers every student to become a *climate champion*, one action at a
     # -----------------
     # Admin / Settings
     # -----------------
-    with tabs[4]:
+with tabs[4]:
         st.header(loc['settings'])
         st.subheader(loc['admin_login'])
         pwd = st.text_input("Password", type='password')
