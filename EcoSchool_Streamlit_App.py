@@ -470,47 +470,42 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
         st.subheader(loc['admin_login'])
         pwd = st.text_input("Password", type='password')
         if pwd == ADMIN_PASSWORD:
-            st.success("Admin authenticated")
-            # Moved History / Teacher review section here
-        st.subheader(loc['history'])
-        entries = load_entries()
-        if entries.empty:
-            st.info("No entries yet")
-        else:
-            # show a simple feed
-            for _, row in entries.iterrows():
-                cols = st.columns([3,1])
-                with cols[0]:
-                    st.write(f"**{row['student']}** — {row['class_name']} — {row['category']} — {row['quantity']} {row['unit']}")
-                    st.write(f"{row['date'].strftime('%Y-%m-%d') if not pd.isna(row['date']) else row['date']}")
-                    st.write(f"CO2: {row['co2']:.2f} kg")
-                    if row['notes']:
-                        st.write(row['notes'])
-                with cols[1]:
-                    if row['verified'] == 0:
-                        if st.button(f"{loc['verify']} {int(row['id'])}"):
-                            verify_entry(int(row['id']))
-                            st.rerun()
-                    else:
-                        st.write("✅ Verified")
-
-        st.subheader(loc['edit_factors'])
-        factors_df = pd.DataFrame(list(factors.items()), columns=['category','factor'])
-        edited = st.data_editor(
-factors_df,
-use_container_width=True,
-disabled=False
-)
-        if st.button(loc['save']):
-            for _, r in edited.iterrows():
-                set_factor(r['category'], r['factor'])
-            st.success("Saved factors")
-
-        st.subheader(loc['export_csv'])
-        all_entries = load_entries()
-        if not all_entries.empty:
-            csv = all_entries.to_csv(index=False)
-            st.download_button("Download CSV", data=csv, file_name='ecoschool_entries.csv', mime='text/csv')
+            st.success("Admin authenticated")# Moved History / Teacher review section here
+            st.subheader(loc['history'])
+            entries = load_entries()
+            if entries.empty:
+                st.info("No entries yet")
+            else:# show a simple feed
+                for _, row in entries.iterrows():
+                    cols = st.columns([3,1])
+                    with cols[0]:
+                        st.write(f"**{row['student']}** — {row['class_name']} — {row['category']} — {row['quantity']} {row['unit']}")
+                        st.write(f"{row['date'].strftime('%Y-%m-%d') if not pd.isna(row['date']) else row['date']}")
+                        st.write(f"CO2: {row['co2']:.2f} kg")
+                        if row['notes']:
+                            st.write(row['notes'])
+                    with cols[1]:
+                        if row['verified'] == 0:
+                            if st.button(f"{loc['verify']} {int(row['id'])}"):
+                                verify_entry(int(row['id']))
+                                st.rerun()
+                            else:
+                                st.write("✅ Verified")
+            st.subheader(loc['edit_factors'])
+            factors_df = pd.DataFrame(list(factors.items()), columns=['category','factor'])
+            edited = st.data_editor(
+                factors_df,
+                use_container_width=True,
+                disabled=False)
+            if st.button(loc['save']):
+                for _, r in edited.iterrows():
+                    set_factor(r['category'], r['factor'])
+                st.success("Saved factors")
+            st.subheader(loc['export_csv'])
+            all_entries = load_entries()
+            if not all_entries.empty:
+                csv = all_entries.to_csv(index=False)
+                st.download_button("Download CSV", data=csv, file_name='ecoschool_entries.csv', mime='text/csv')
         else:
             st.info("Enter admin password to edit factors or export data")
 
