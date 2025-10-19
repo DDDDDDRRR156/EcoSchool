@@ -308,7 +308,7 @@ div[data-testid="stMetricValue"] {
         else:
             # compute totals
             total_co2 = entries['co2'].sum()
-            st.markdown('<div style="font-size:20px font-weight:600; color:#aaa;">Total emissions (kg CO2)</div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-size:20px; font-weight:600; color:#ffffff;">Total emissions (kg CO2)</div>', unsafe_allow_html=True)
             st.metric(label="", value=f"{total_co2:.2f}")
 
             # timeframe filters
@@ -354,11 +354,11 @@ div[data-testid="stMetricValue"] {
             🌍 Equivalents / સમકક્ષ મૂલ્યો 
             </h1>
             """,unsafe_allow_html=True)
-            st.markdown('<div style="font-size:20px font-weight:600; color:#aaa;">🌳 Trees Planted / વાવવામાં આવેલા વૃક્ષો</div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-size:20px; font-weight:600; color:#ffffff;">🌳 Trees Planted / વાવવામાં આવેલા વૃક્ષો</div>', unsafe_allow_html=True)
             st.metric(label="", value=round(total_co2 / 21, 2))  # 1 tree ≈ 21 kg CO₂/year
-            st.markdown('<div style="font-size:20px font-weight:600; color:#aaa;">🚗 Car Kilometers Avoided / ટાળેલા કાર કિલોમીટર</div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-size:20px; font-weight:600; color:#ffffff;">🚗 Car Kilometers Avoided / ટાળેલા કાર કિલોમીટર</div>', unsafe_allow_html=True)
             st.metric(label="", value=round(total_co2 / 0.25, 2))  # 1 km ≈ 0.25 kg CO₂
-            st.markdown('<div style="font-size:20px font-weight:600; color:#aaa;">💡 Energy Conserved (kWh) / બચાવેલી ઊર્જા (કિલોવોટ કલાક)</div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-size:20px; font-weight:600; color:#ffffff;">💡 Energy Conserved (kWh) / બચાવેલી ઊર્જા (કિલોવોટ કલાક)</div>', unsafe_allow_html=True)
             st.metric(label="", value=round(total_co2 / 0.92, 2))  # 1 kWh ≈ 0.92 kg CO₂
             st.markdown("""
 <p style='font-size: 20px;'><b>ℹ️ About these equivalents / આ સમકક્ષ મૂલ્યો વિશે:</b></p>  
