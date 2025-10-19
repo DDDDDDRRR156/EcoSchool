@@ -240,49 +240,90 @@ def main():
     init_db()
     loc = sidebar_locale()
     st.title(loc['title'])
-
-    # Sticky Header with App Name and Navigation
     st.markdown("""
     <style>
-    .sticky-header {
+    /* Main page adjustments */
+    .block-container {
+        padding-top: 6rem;
+        padding-bottom: 5rem;
+    }
+
+    /* Sticky header */
+    .eco-header {
         position: fixed;
         top: 0;
-        left: 0;
         width: 100%;
-        background-color: white;
-        z-index: 1000;
-        padding: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        border-bottom: 1px solid #ddd;
+        background-color: #0E1117;
+        color: white;
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+        padding: 1rem 0;
+        z-index: 9999;
+        border-bottom: 2px solid #4CAF50;
     }
-    .sticky-nav {
+
+    /* Sticky navbar */
+    .eco-navbar {
         position: fixed;
-        top: 60px;  /* Adjust based on header height */
+        top: 3.8rem;
+        width: 100%;
+        background-color: #161B22;
+        text-align: center;
+        z-index: 9998;
+        border-bottom: 1px solid #333;
+    }
+
+    .eco-navbar a {
+        display: inline-block;
+        color: #ccc;
+        padding: 0.75rem 1.5rem;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .eco-navbar a:hover {
+        color: #4CAF50;
+    }
+
+    /* Footer styling */
+    .eco-footer {
+        position: fixed;
+        bottom: 0;
         left: 0;
         width: 100%;
-        background-color: white;
-        z-index: 999;
-        padding: 10px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        background-color: #0E1117;
+        color: #bbb;
+        text-align: center;
+        padding: 0.75rem 0;
+        font-size: 0.9rem;
+        border-top: 1px solid #333;
     }
-    .main-content {
-        margin-top: 120px;  /* Adjust to account for header and nav */
+
+    .eco-footer a {
+        color: #4CAF50;
+        text-decoration: none;
+        margin: 0 8px;
+    }
+
+    .eco-footer a:hover {
+        text-decoration: underline;
     }
     </style>
-    <div class="sticky-header">
-        <h1 style="margin: 0; color: #2E8B57;">{}</h1>
+
+    <!-- Header -->
+    <div class="eco-header">🌍 EcoSchool — School Carbon Calculator</div>
+
+    <!-- Navbar -->
+    <div class="eco-navbar">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#add-entry">Add Entry</a>
+        <a href="#history">History / Class Feed</a>
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="#settings">Admin Settings</a>
     </div>
-    <div class="sticky-nav">
-        <div style="display: flex; justify-content: space-around;">
-            <a href="#dashboard" style="text-decoration: none; color: #2E8B57; font-weight: bold;">{}</a>
-            <a href="#add_entry" style="text-decoration: none; color: #2E8B57; font-weight: bold;">{}</a>
-            <a href="#history" style="text-decoration: none; color: #2E8B57; font-weight: bold;">{}</a>
-            <a href="#leaderboard" style="text-decoration: none; color: #2E8B57; font-weight: bold;">{}</a>
-            <a href="#settings" style="text-decoration: none; color: #2E8B57; font-weight: bold;">{}</a>
-        </div>
-    </div>
-    <div class="main-content">
-    """.format(loc['title'], loc['dashboard'], loc['add_entry'], loc['history'], loc['leaderboard'], loc['settings']), unsafe_allow_html=True)
+""", unsafe_allow_html=True)
+
 
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['history'], loc['leaderboard'], loc['settings']])
 
