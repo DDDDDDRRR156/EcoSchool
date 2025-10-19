@@ -534,11 +534,11 @@ footer img:hover {
 
 <footer>
     <div>
-        <strong>EcoSchool — Building a Greener Tomorrow 🌿</strong>
+        <strong style='font-size: 15px;'>EcoSchool — Building a Greener Tomorrow 🌿</strong>
     </div>
     <div style="margin-top:6px;">
         <a href="tel:+918780695872"><img src="phone.png" alt="Phone"></a>
-        <a href="mailto:shauryanagar@gmail.com"><img src="email.png" alt="Email"></a>
+        <a href="mailto:nagarshaurya70@gmail.com"><img src="email.png" alt="Email"></a>
         <a href="https://www.instagram.com" target="_blank"><img src="instagram.png" alt="Instagram"></a>
         <a href="https://www.facebook.com" target="_blank"><img src="facebook.png" alt="Facebook"></a>
     </div>
