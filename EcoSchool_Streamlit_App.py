@@ -242,7 +242,7 @@ def main():
     <style>
     .block-container {
         padding-top: 100 rem !important;
-        padding-bottom: 5rem !important;
+        padding-bottom: 500rem !important;
     }
 
     /* HEADER */
@@ -287,13 +287,13 @@ def main():
         text-decoration: underline;
     }
     </style>
-
-    <div class="eco-header">
-        🌍 EcoSchool — School Carbon Calculator
-    </div>
 """, unsafe_allow_html=True)
 
-
+    st.markdown("""
+    <div class="eco-header">
+        🌍 EcoSchool — School Carbon Calculator
+    </div>""", unsafe_allow_html=True)
+    
 
 
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['history'], loc['leaderboard'], loc['settings']])
