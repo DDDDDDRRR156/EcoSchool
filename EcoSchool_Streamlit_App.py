@@ -235,7 +235,7 @@ def sidebar_locale():
 # Streamlit App
 # -------------------------
 def main():
-    st.set_page_config(page_title="EcoSchool", layout='wide')
+    st.set_page_config(page_title="EcoSchool", layout='wide', page_icon="🌿")
     init_db()
     loc = sidebar_locale()
     st.markdown("""
