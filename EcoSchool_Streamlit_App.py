@@ -260,10 +260,10 @@ def main():
     }
     /* Increase font size for st.metric components */
     .metric-value {
-        font-size: 2em !important;
+        font-size: 2rem !important;
     }
     .metric-label {
-        font-size: 1.2em !important;
+        font-size: 2rem !important;
     }
     </style>
 """, unsafe_allow_html=True)
