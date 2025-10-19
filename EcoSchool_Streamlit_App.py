@@ -242,7 +242,6 @@ def main():
 
     st.markdown("""
     <div class="eco-header" style="
-    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
