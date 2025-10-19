@@ -507,6 +507,13 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
             if not all_entries.empty:
                 csv = all_entries.to_csv(index=False)
                 st.download_button("Download CSV", data=csv, file_name='ecoschool_entries.csv', mime='text/csv')
+                # New: Clear All Entries option
+            st.subheader("Clear All Entries")
+            st.warning("⚠️ This action will permanently delete all entries. Proceed with caution!")
+            if st.button("Clear All Entries"):
+                clear_all_entries()
+                st.success("All entries have been cleared.")
+                st.rerun()  # Refresh the page to update the view
         else:
             st.info("Enter admin password to edit factors or export data")
 
