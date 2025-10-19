@@ -236,7 +236,7 @@ def sidebar_locale():
 # -------------------------
 
 def main():
-    st.set_page_config(title="EcoSchool App",page_layout=wide)
+    st.set_page_config(page_title="EcoSchool", layout='wide')
     init_db()
     loc = sidebar_locale()
     st.title(loc['title'])
