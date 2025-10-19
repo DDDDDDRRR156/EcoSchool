@@ -333,7 +333,7 @@ st.markdown("""
     # -----------------
     # Dashboard
     # -----------------
-    with tabs[0]:
+ with tabs[0]:
         st.header(loc['dashboard'])
         entries = load_entries()
         if entries.empty:
