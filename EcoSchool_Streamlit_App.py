@@ -160,6 +160,12 @@ def get_factors():
     conn.close()
     return df['factor'].to_dict()
 
+def get_image_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode()
+    return encoded_string
+   
+
 
 def set_factor(category, factor):
     conn = sqlite3.connect(DB_FILE)
@@ -537,10 +543,10 @@ footer img:hover {
         <strong style='font-size: 15px;'>EcoSchool — Building a Greener Tomorrow 🌿</strong>
     </div>
     <div style="margin-top:6px;">
-        <a href="tel:+918780695872"><img src="phone.png" alt="Phone"></a>
-        <a href="mailto:nagarshaurya70@gmail.com"><img src="email.png" alt="Email"></a>
-        <a href="https://www.instagram.com" target="_blank"><img src="instagram.png" alt="Instagram"></a>
-        <a href="https://www.facebook.com" target="_blank"><img src="facebook.png" alt="Facebook"></a>
+        <a href="tel:+918780695872"><img src="data:image/png;base64,{get_image_base64('phone.png')}" alt="Phone"></a>
+        <a href="mailto:nagarshaurya70@gmail.com"><img src="data:image/png;base64,{get_image_base64('email.png')}" alt="Email"></a>
+        <a href="https://www.instagram.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('instagram.png')}" alt="Instagram"></a>
+        <a href="https://www.facebook.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('facebook.png')}" alt="Facebook"></a>
     </div>
     <div style="margin-top:6px;">
         Contact: <b>Shaurya Nagar</b> — +91 8780 69 5872
