@@ -239,7 +239,6 @@ def main():
     st.set_page_config(page_title="EcoSchool", layout='wide')
     init_db()
     loc = sidebar_locale()
-    st.title(loc['title'])
     st.markdown("""
     <style>
     .block-container {
