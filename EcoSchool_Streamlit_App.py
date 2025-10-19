@@ -241,7 +241,7 @@ def main():
     st.markdown("""
     <style>
     .block-container {
-        padding-top: 10 rem !important;
+        padding-top: 100 rem !important;
         padding-bottom: 5rem !important;
     }
 
