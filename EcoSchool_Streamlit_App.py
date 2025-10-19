@@ -321,8 +321,7 @@ st.markdown("""
         <a href="#settings">Admin Settings</a>
     </div>
 """, unsafe_allow_html=True)
-
-    with tabs[0]:
+with tabs[0]:
         st.header(loc['dashboard'])
         entries = load_entries()
         if entries.empty:
