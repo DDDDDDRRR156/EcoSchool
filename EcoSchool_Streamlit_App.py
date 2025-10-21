@@ -444,7 +444,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                     st.success(f"Saved — estimated {co2:.2f} kg CO2")
 
 
-        # -----------------
+            # -----------------
     # Leaderboard / Challenges
     # -----------------
     with tabs[2]:
@@ -454,11 +454,14 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
         # New: Grade filter
         grade_options = [f"{i}{'st' if i == 1 else 'nd' if i == 2 else 'rd' if i == 3 else 'th'} Grade" for i in range(1, 13)]
         grade_display = st.selectbox("Select Grade", options=grade_options)
+        if not grade_display:
+            st.error("Please select a grade to view the leaderboard.")
+            return  # Stop execution if no grade is selected
         try:
             grade = int(grade_display.split()[0])
         except (ValueError, IndexError):
-            grade = 1  
-        # Default to 1st Grade if parsing fails
+            st.error("Invalid grade selection. Please try again.")
+            return
         entries = load_entries(only_verified=True)
         if entries.empty:
             st.info("No verified entries yet — teachers should verify first")
