@@ -258,6 +258,7 @@ def main():
     st.set_page_config(page_title="EcoSchool", layout='wide', page_icon="app_icon.png")
     init_db()
     loc = sidebar_locale()
+    sidebar_tips()
     st.markdown("""
 <style>
 /* hide label inside metric */
