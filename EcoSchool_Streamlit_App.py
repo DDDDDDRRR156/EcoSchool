@@ -474,7 +474,6 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                 df = df[df['date'] >= now - pd.Timedelta(days=30)]
             elif timeframe == "Last 365 Days":
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
-            # Filter by grade (assuming class_name starts with grade number, e.g., "10A")
             df = df[df['class_name'].str.startswith(str(grade))]
             if df.empty:
                 st.info(f"No verified entries for {grade}th Grade in the selected timeframe.")
