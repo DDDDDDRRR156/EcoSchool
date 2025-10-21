@@ -452,7 +452,9 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
         # Timeframe filter
         timeframe = st.selectbox("Select timeframe", ["All Time", "Last 7 Days", "Last 30 Days", "Last 365 Days"])
         # New: Grade filter
-        grade = st.selectbox("Select Grade", options=list(range(1, 13)), format_func=lambda x: f"{x}th Grade")
+        grade_options = [f"{i}{'st' if i == 1 else 'nd' if i == 2 else 'rd' if i == 3 else 'th'} Grade" for i in range(1, 13)]
+        grade_display = st.selectbox("Select Grade", options=grade_options)
+        grade = int(grade_display.split()[0])  # Extract the number from the display
         entries = load_entries(only_verified=True)
         if entries.empty:
             st.info("No verified entries yet — teachers should verify first")
