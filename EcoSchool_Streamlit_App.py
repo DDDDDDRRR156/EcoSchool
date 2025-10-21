@@ -514,67 +514,72 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                     use_container_width=True
                 )
 
-    # -----------------
+        # -----------------
     # Admin / Settings
     # -----------------
     with tabs[3]:
         st.header(loc['settings'])
         st.subheader(loc['admin_login'])
         pwd = st.text_input("Password", type='password')
-        if pwd == ADMIN_PASSWORD:
-            st.success("Admin authenticated")
 
-            # Moved History / Teacher review section here
-            st.subheader(loc['history'])
+        # maintain login state in session
+        if "admin_logged_in" not in st.session_state:
+            st.session_state.admin_logged_in = False
+
+        if pwd == ADMIN_PASSWORD:
+            st.session_state.admin_logged_in = True
+            st.success("✅ Admin authenticated")
+
+        if st.session_state.admin_logged_in:
+            st.markdown("---")
+            st.subheader("📜 Teacher Review / Entry Verification")
             entries = load_entries()
             if entries.empty:
-                st.info("No entries yet")
+                st.info("No entries yet.")
             else:
-                # show a simple feed
                 for _, row in entries.iterrows():
-                    cols = st.columns([3,1])
+                    cols = st.columns([3, 1])
                     with cols[0]:
                         st.write(f"**{row['student']}** — {row['class_name']} — {row['category']} — {row['quantity']} {row['unit']}")
-                        st.write(f"{row['date'].strftime('%Y-%m-%d') if not pd.isna(row['date']) else row['date']}")
-                        st.write(f"CO2: {row['co2']:.2f} kg")
+                        st.write(f"{row['date']}")
+                        st.write(f"CO₂: {row['co2']:.2f} kg")
                         if row['notes']:
-                            st.write(row['notes'])
+                            st.caption(row['notes'])
                     with cols[1]:
                         if row['verified'] == 0:
-                            if st.button(f"{loc['verify']} {int(row['id'])}"):
+                            if st.button(f"Verify {int(row['id'])}"):
                                 verify_entry(int(row['id']))
-                                st.rerun()
+                                st.experimental_rerun()
                         else:
                             st.write("✅ Verified")
 
-            st.subheader(loc['edit_factors'])
-            factors_df = pd.DataFrame(list(factors.items()), columns=['category','factor'])
-            edited = st.data_editor(
-    factors_df,
-    use_container_width=True,
-    disabled=False
-)
-            if st.button(loc['save']):
+            st.markdown("---")
+            st.subheader("🧮 Edit Conversion Factors")
+            factors_df = pd.DataFrame(list(factors.items()), columns=["Category", "Factor"])
+            edited = st.data_editor(factors_df, use_container_width=True)
+            if st.button("💾 Save Factors"):
                 for _, r in edited.iterrows():
-                    set_factor(r['category'], r['factor'])
-                st.success("Saved factors")
+                    set_factor(r["Category"], r["Factor"])
+                st.success("Factors updated successfully.")
 
-            st.subheader(loc['export_csv'])
+            st.markdown("---")
+            st.subheader("📥 Export Data")
             all_entries = load_entries()
             if not all_entries.empty:
                 csv = all_entries.to_csv(index=False)
-                st.download_button("Download CSV", data=csv, file_name='ecoschool_entries.csv', mime='text/csv')
+                st.download_button("Download CSV", data=csv, file_name="ecoschool_entries.csv", mime="text/csv")
 
-            # New: Clear All Entries option
-            st.subheader("Clear All Entries")
-            st.warning("⚠️ This action will permanently delete all entries. Proceed with caution!")
+            st.markdown("---")
+            st.subheader("🗑️ Clear All Entries")
+            st.warning("⚠️ This will permanently delete all records. Proceed carefully!")
             if st.button("Clear All Entries"):
                 clear_all_entries()
-                st.success("All entries have been cleared.")
-                st.rerun()  # Refresh the page to update the view
+                st.success("All entries cleared.")
+                st.experimental_rerun()
 
         else:
-            st.info("Enter admin password to edit factors or export data")
+            st.info("🔒 Enter admin password to access settings and management tools.")
+
     # --- Sticky Footer ---
     footer_html = f"""
     <style>
