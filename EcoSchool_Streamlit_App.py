@@ -348,7 +348,7 @@ div[data-testid="stMetricValue"] {
                     weekly_leaderboard = weekly_leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True).head(3)
                     weekly_leaderboard['rank'] = weekly_leaderboard.index + 1
                     for _, row in weekly_leaderboard.iterrows():
-                        st.markdown(f"<p style='font-size: 30px;'><strong>{row['rank']}. {row['student']} ({row['class_name']})</strong> — {row['co2']:.2f} kg CO₂ saved</p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='font-size: 30px;'><strong>{row['rank']}. {row['student']} ({row['class_name']})</strong> — {row['co2']:.2f} kg CO₂ emitted</p>", unsafe_allow_html=True)
                 else:
                     st.info("No verified entries in the last 7 days.")
             else:
@@ -442,7 +442,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                         'co2': co2
                     }
                     add_entry_to_db(entry)
-                    st.success(f"Saved — estimated {co2:.2f} kg CO2")
+                    st.success(f"Saved — recorded {co2:.2f} kg CO₂ emitted")
 
 
     # -----------------
@@ -476,7 +476,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
             elif timeframe == "Last 365 Days":
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
             leaderboard = df.groupby(['student', 'class_name']).agg({'co2':'sum'}).reset_index()
-            leaderboard = leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True)
+            leaderboard = leaderboard.sort_values(by='co2', ascending=True).reset_index(drop=True)
             leaderboard['rank'] = leaderboard.index + 1
             def title_for_rank(rank):
                 if rank == 1:
@@ -494,9 +494,9 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                     'rank': 'Rank',
                     'student': 'Student',
                     'class_name': 'Class / Section',
-                    'co2': 'CO₂ Saved (kg)'
+                    'co2': 'CO₂ Emitted (kg)'
                 }).style.background_gradient(subset=['CO₂ Saved (kg)'], cmap='Greens').format({
-                    'CO₂ Saved (kg)': '{:.2f}'
+                    'CO₂ Emitted (kg)': '{:.2f}'
                 }),
                 use_container_width=True
             )
