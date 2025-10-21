@@ -496,7 +496,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
         "Title": "Activity",
         "student": "Student",
         "class_name": "Class",
-        "co2": "CO₂ Saved (kg)"
+        "co2": "CO₂ Emitted (kg)"
     }),
     use_container_width=True
 )
