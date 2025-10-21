@@ -42,6 +42,8 @@ from datetime import datetime, date, timedelta
 import altair as alt 
 import io
 import base64
+import random
+import time
 
 # -------------------------
 # Constants & Defaults
@@ -140,6 +142,12 @@ LOCALES = {
     }
 }
 
+
+# Flatten suggestions into (category, tip) tuples
+ALL_TIPS = []
+for cat, tips in SUGGESTIONS.items():
+    for tip in tips:
+        ALL_TIPS.append((cat, tip)
 # -------------------------
 # Database helpers
 # -------------------------
@@ -266,15 +274,26 @@ def badge_for_total(total_kg):
 def sidebar_locale():
     lang = st.sidebar.selectbox("Language / ભાષા", options=['en', 'gu'], format_func=lambda x: 'English' if x=='en' else 'ગુજરાતી')
     return LOCALES[lang]
-def sidebar_tips():
-    st.sidebar.markdown("---")  # Divider
-    st.sidebar.markdown("### 💡 Tips to Reduce Emissions / CARBON SAVINGS")
+def sidebar_rotating_tip():
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 💡 Tip to Reduce Emissions")
 
-    # Iterate through SUGGESTIONS dict
-    for cat, tips in SUGGESTIONS.items():
-        st.sidebar.markdown(f"**{cat}**")
-        for tip in tips:
-            st.sidebar.markdown(f"- {tip}")
+    # Initialize index in session state
+    if "tip_index" not in st.session_state:
+        st.session_state.tip_index = random.randint(0, len(ALL_TIPS)-1)
+        st.session_state.last_update = time.time()
+
+    # Rotate tip every 60 seconds
+    if time.time() - st.session_state.last_update > 60:
+        st.session_state.tip_index = (st.session_state.tip_index + 1) % len(ALL_TIPS)
+        st.session_state.last_update = time.time()
+        st.experimental_rerun()  # Force rerun to update sidebar
+
+    # Display current tip
+    cat, tip = ALL_TIPS[st.session_state.tip_index]
+    st.sidebar.markdown(f"**{cat}**")
+    st.sidebar.markdown(f"- {tip}")
+
 
 # -------------------------
 # Streamlit App
@@ -283,7 +302,7 @@ def main():
     st.set_page_config(page_title="EcoSchool", layout='wide', page_icon="app_icon.png")
     init_db()
     loc = sidebar_locale()
-    sidebar_tips()
+    sidebar_rotating_tip()
     st.markdown("""
 <style>
 /* hide label inside metric */
