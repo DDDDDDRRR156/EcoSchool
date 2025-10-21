@@ -454,7 +454,11 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
         # New: Grade filter
         grade_options = [f"{i}{'st' if i == 1 else 'nd' if i == 2 else 'rd' if i == 3 else 'th'} Grade" for i in range(1, 13)]
         grade_display = st.selectbox("Select Grade", options=grade_options)
-        grade = int(grade_display.split()[0])  # Extract the number from the display
+        try:
+            grade = int(grade_display.split()[0])
+        except (ValueError, IndexError):
+            grade = 1  
+        # Default to 1st Grade if parsing fails
         entries = load_entries(only_verified=True)
         if entries.empty:
             st.info("No verified entries yet — teachers should verify first")
