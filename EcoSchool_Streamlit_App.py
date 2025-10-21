@@ -147,7 +147,7 @@ LOCALES = {
 ALL_TIPS = []
 for cat, tips in SUGGESTIONS.items():
     for tip in tips:
-        ALL_TIPS.append((cat, tip)
+        ALL_TIPS.append((cat, tip))
 # -------------------------
 # Database helpers
 # -------------------------
