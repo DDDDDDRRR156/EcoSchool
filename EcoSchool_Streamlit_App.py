@@ -287,7 +287,7 @@ div[data-testid="stMetricValue"] {
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['leaderboard'], loc['settings']])
 
     factors = get_factors()
-        with tabs[0]:
+    with tabs[0]:
         st.header(loc['dashboard'])
         entries = load_entries()
         if entries.empty:
