@@ -501,7 +501,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
     use_container_width=True
 )
 
-            )
+            
             # -----------------# Admin / Settings# -----------------
     with tabs[3]:
         st.header(loc['settings'])
