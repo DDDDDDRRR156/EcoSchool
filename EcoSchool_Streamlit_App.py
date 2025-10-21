@@ -488,18 +488,19 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                 else:
                     return "🌱 Seedling"
             leaderboard['Title'] = leaderboard['rank'].apply(title_for_rank)  
-            st.write("DEBUG — leaderboard columns:", leaderboard.columns.tolist())
             st.subheader(f"Leaderboard — {timeframe}")
+            leaderboard = leaderboard.sort_values(by="rank", ascending=True)
             st.dataframe(
-                leaderboard[['rank', 'Title', 'student', 'class_name', 'co2']].rename(columns={
-                    'rank': 'Rank',
-                    'student': 'Student',
-                    'class_name': 'Class / Section',
-                    'co2': 'CO₂ Emitted (kg)'
-                }).style.background_gradient(subset=['CO₂ Saved (kg)'], cmap='Greens').format({
-                    'CO₂ Emitted (kg)': '{:.2f}'
-                }),
-                use_container_width=True
+                leaderboard[["rank", "Title", "student", "class_name", "co2"]].rename(columns={
+        "rank": "Rank",
+        "Title": "Activity",
+        "student": "Student",
+        "class_name": "Class",
+        "co2": "CO₂ Saved (kg)"
+    }),
+    use_container_width=True
+)
+
             )
             # -----------------# Admin / Settings# -----------------
     with tabs[3]:
