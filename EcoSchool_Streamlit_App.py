@@ -44,18 +44,6 @@ import io
 import base64
 
 # -------------------------
-# Helper for base64 images
-# -------------------------
-
-def get_image_base64(image_path):
-    import base64
-    if not os.path.exists(image_path):
-        return ""  # return blank if file not found
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode("utf-8")
-
-
-# -------------------------
 # Constants & Defaults
 # -------------------------
 DB_FILE = "ecoschool.db"
@@ -172,6 +160,12 @@ def get_factors():
     conn.close()
     return df['factor'].to_dict()
 
+def get_image_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode()
+    return encoded_string
+
+
 
 def set_factor(category, factor):
     conn = sqlite3.connect(DB_FILE)
@@ -211,15 +205,12 @@ def verify_entry(entry_id):
     c.execute('UPDATE entries SET verified=1 WHERE id=?', (entry_id,))
     conn.commit()
     conn.close()
-
-
 def clear_all_entries():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute('DELETE FROM entries')
     conn.commit()
     conn.close()
-
 # -------------------------
 # Business logic
 # -------------------------
@@ -255,7 +246,7 @@ def sidebar_locale():
 # Streamlit App
 # -------------------------
 def main():
-    st.set_page_config(page_title="EcoSchool", layout='wide', page_icon="🍃")
+    st.set_page_config(page_title="EcoSchool", layout='wide', page_icon="app_icon.png")
     init_db()
     loc = sidebar_locale()
     st.markdown("""
@@ -275,9 +266,7 @@ div[data-testid="stMetricValue"] {
 }
 </style>
 """, unsafe_allow_html=True)
-    # Header with logo
-    logo_base64 = get_image_base64("logo.png")  # Assuming logo.png is in the same directory
-    st.markdown(f"""
+    st.markdown("""
     <div class="eco-header" style="
     top: 0;
     left: 0;
@@ -291,10 +280,10 @@ div[data-testid="stMetricValue"] {
     z-index: 9999;
     border-bottom: 2px solid #4CAF50;
     box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-        <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 60px; margin-right: 20px; vertical-align: middle;">
-        🌍 EcoSchool — School Carbon Calculator
+    <img src="logo.PNG" style="height: 60px; margin-right: 20px; vertical-align: middle;">
+        EcoSchool — School Carbon Calculator
     </div>""", unsafe_allow_html=True)
-    
+
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['leaderboard'], loc['settings']])
 
     factors = get_factors()
@@ -304,6 +293,7 @@ div[data-testid="stMetricValue"] {
         if entries.empty:
             st.info("No entries yet — ask students to add today's activities!")
         else:
+            
             # timeframe filters
             col1, col2 = st.columns([2,1])
             with col2:
@@ -318,11 +308,11 @@ div[data-testid="stMetricValue"] {
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
 
             # compute totals
-            total_co2 = df['co2'].sum()
+            total_co2 = entries['co2'].sum()
             st.markdown('<div style="font-size:20px; font-weight:600; color:#ffffff;">Total emissions (kg CO2)</div>', unsafe_allow_html=True)
             st.metric(label="", value=f"{total_co2:.2f}")
 
-            # Expandable Class-wise Breakdown
+            # New: Expandable Class-wise Breakdown
             with st.expander("📊 Class-wise Breakdown / વર્ગ-વાર વિભાજન"):
                 if df.empty:
                     st.info("No data for the selected timeframe.")
@@ -408,7 +398,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
 <hr>
 """, unsafe_allow_html=True)
 
-    # -----------------
+        # -----------------
     # Add entry
     # -----------------
     with tabs[1]:
@@ -454,24 +444,13 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                     add_entry_to_db(entry)
                     st.success(f"Saved — estimated {co2:.2f} kg CO2")
 
+
     # -----------------
     # Leaderboard / Challenges
     # -----------------
     with tabs[2]:
-        st.header(loc['leaderboard'])
-        # Timeframe filter
+        st.header(loc['leaderboard'])# Timeframe filter
         timeframe = st.selectbox("Select timeframe", ["All Time", "Last 7 Days", "Last 30 Days", "Last 365 Days"])
-        # New: Grade filter
-        grade_options = [f"{i}{'st' if i == 1 else 'nd' if i == 2 else 'rd' if i == 3 else 'th'} Grade" for i in range(1, 13)]
-        grade_display = st.selectbox("Select Grade", options=grade_options)
-        if not grade_display:
-            st.error("Please select a grade to view the leaderboard.")
-            return  # Stop execution if no grade is selected
-        try:
-            grade = int(grade_display.split()[0])
-        except (ValueError, IndexError):
-            st.error("Invalid grade selection. Please try again.")
-            return
         entries = load_entries(only_verified=True)
         if entries.empty:
             st.info("No verified entries yet — teachers should verify first")
@@ -484,150 +463,130 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                 df = df[df['date'] >= now - pd.Timedelta(days=30)]
             elif timeframe == "Last 365 Days":
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
-            # Filter by grade (assuming class_name starts with grade number, e.g., "10A")
-            df = df[df['class_name'].str.startswith(str(grade))]
-            if df.empty:
-                st.info(f"No verified entries for {grade}th Grade in the selected timeframe.")
-            else:
-                leaderboard = df.groupby('class_name').agg({'co2':'sum'}).reset_index()
-                leaderboard = leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True)
-                leaderboard['rank'] = leaderboard.index + 1
-                def title_for_rank(rank):
-                    if rank == 1:
-                        return "🌟 Carbon Star"
-                    elif rank <= 3:
-                        return "🥈 Eco Champion"
-                    elif rank <= 10:
-                        return "🌿 Green Hero"
-                    else:
-                        return "🌱 Seedling"
-                leaderboard['Title'] = leaderboard['rank'].apply(title_for_rank)        
-                st.subheader(f"Leaderboard for {grade}th Grade — {timeframe}")
-                st.dataframe(
-                    leaderboard[['rank', 'Title', 'class_name', 'co2']].rename(columns={
-                        'rank': 'Rank',
-                        'class_name': 'Section',
-                        'co2': 'CO₂ Saved (kg)'
-                    }).style.background_gradient(subset=['CO₂ Saved (kg)'], cmap='Greens').format({
-                        'CO₂ Saved (kg)': '{:.2f}'
-                    }),
-                    use_container_width=True
-                )
-
-        # -----------------
-    # Admin / Settings
-    # -----------------
+            leaderboard = df.groupby(['student', 'class_name']).agg({'co2':'sum'}).reset_index()
+            leaderboard = leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True)
+            leaderboard['rank'] = leaderboard.index + 1
+            def title_for_rank(rank):
+                if rank == 1:
+                    return "🌟 Carbon Star"
+                elif rank <= 3:
+                    return "🥈 Eco Champion"
+                elif rank <= 10:
+                    return "🌿 Green Hero"
+                else:
+                    return "🌱 Seedling"
+            leaderboard['Title'] = leaderboard['rank'].apply(title_for_rank)        
+            st.subheader(f"Leaderboard — {timeframe}")
+            st.dataframe(
+                leaderboard[['rank', 'Title', 'student', 'class_name', 'co2']].rename(columns={
+                    'rank': 'Rank',
+                    'student': 'Student',
+                    'class_name': 'Class / Section',
+                    'co2': 'CO₂ Saved (kg)'
+                }).style.background_gradient(subset=['CO₂ Saved (kg)'], cmap='Greens').format({
+                    'CO₂ Saved (kg)': '{:.2f}'
+                }),
+                use_container_width=True
+            )
+            # -----------------# Admin / Settings# -----------------
     with tabs[3]:
         st.header(loc['settings'])
         st.subheader(loc['admin_login'])
         pwd = st.text_input("Password", type='password')
-
-        # maintain login state in session
-        if "admin_logged_in" not in st.session_state:
-            st.session_state.admin_logged_in = False
-
         if pwd == ADMIN_PASSWORD:
-            st.session_state.admin_logged_in = True
-            st.success("✅ Admin authenticated")
-
-        if st.session_state.admin_logged_in:
-            st.markdown("---")
-            st.subheader("📜 Teacher Review / Entry Verification")
+            st.success("Admin authenticated")# Moved History / Teacher review section here
+            st.subheader(loc['history'])
             entries = load_entries()
             if entries.empty:
-                st.info("No entries yet.")
-            else:
+                st.info("No entries yet")
+            else:# show a simple feed
                 for _, row in entries.iterrows():
-                    cols = st.columns([3, 1])
+                    cols = st.columns([3,1])
                     with cols[0]:
                         st.write(f"**{row['student']}** — {row['class_name']} — {row['category']} — {row['quantity']} {row['unit']}")
-                        st.write(f"{row['date']}")
-                        st.write(f"CO₂: {row['co2']:.2f} kg")
+                        st.write(f"{row['date'].strftime('%Y-%m-%d') if not pd.isna(row['date']) else row['date']}")
+                        st.write(f"CO2: {row['co2']:.2f} kg")
                         if row['notes']:
-                            st.caption(row['notes'])
+                            st.write(row['notes'])
                     with cols[1]:
                         if row['verified'] == 0:
-                            if st.button(f"Verify {int(row['id'])}"):
+                            if st.button(f"{loc['verify']} {int(row['id'])}"):
                                 verify_entry(int(row['id']))
-                                st.experimental_rerun()
+                                st.rerun()
                         else:
                             st.write("✅ Verified")
-
-            st.markdown("---")
-            st.subheader("🧮 Edit Conversion Factors")
-            factors_df = pd.DataFrame(list(factors.items()), columns=["Category", "Factor"])
-            edited = st.data_editor(factors_df, use_container_width=True)
-            if st.button("💾 Save Factors"):
+            st.subheader(loc['edit_factors'])
+            factors_df = pd.DataFrame(list(factors.items()), columns=['category','factor'])
+            edited = st.data_editor(
+                factors_df,
+                use_container_width=True,
+                disabled=False)
+            if st.button(loc['save']):
                 for _, r in edited.iterrows():
-                    set_factor(r["Category"], r["Factor"])
-                st.success("Factors updated successfully.")
-
-            st.markdown("---")
-            st.subheader("📥 Export Data")
+                    set_factor(r['category'], r['factor'])
+                st.success("Saved factors")
+            st.subheader(loc['export_csv'])
             all_entries = load_entries()
             if not all_entries.empty:
                 csv = all_entries.to_csv(index=False)
-                st.download_button("Download CSV", data=csv, file_name="ecoschool_entries.csv", mime="text/csv")
-
-            st.markdown("---")
-            st.subheader("🗑️ Clear All Entries")
-            st.warning("⚠️ This will permanently delete all records. Proceed carefully!")
+                st.download_button("Download CSV", data=csv, file_name='ecoschool_entries.csv', mime='text/csv')
+                # New: Clear All Entries option
+            st.subheader("Clear All Entries")
+            st.warning("⚠️ This action will permanently delete all entries. Proceed with caution!")
             if st.button("Clear All Entries"):
                 clear_all_entries()
-                st.success("All entries cleared.")
-                st.experimental_rerun()
-
+                st.success("All entries have been cleared.")
+                st.rerun()  # Refresh the page to update the view
         else:
-            st.info("🔒 Enter admin password to access settings and management tools.")
+            st.info("Enter admin password to edit factors or export data")
 
-    # --- Sticky Footer ---
-    footer_html = f"""
-    <style>
-    footer {{
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #f0f0f0;
-        color: #333;
-        text-align: center;
-        padding: 12px 0;
-        font-size: 14px;
-        border-top: 1px solid #ccc;
-        z-index: 100;
-    }}
-    footer img {{
-        width: 28px;
-        margin: 0 10px;
-        vertical-align: middle;
-    }}
-    footer img:hover {{
-        transform: scale(1.15);
-        transition: 0.3s;
-    }}
-    </style>
+# --- Sticky Footer ---
+footer_html = """
+<style>
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f0f0f0;
+    color: #333;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 14px;
+    border-top: 1px solid #ccc;
+    z-index: 100;
+}
+footer img {
+    width: 28px;
+    margin: 0 10px;
+    vertical-align: middle;
+}
+footer img:hover {
+    transform: scale(1.15);
+    transition: 0.3s;
+}
+</style>
 
-    <footer>
-        <div>
-            <strong style='font-size: 15px;'>EcoSchool — Building a Greener Tomorrow 🌿</strong>
-        </div>
-        <div style="margin-top:6px;">
-            <a href="tel:+918780695872"><img src="data:image/png;base64,{get_image_base64('phone.png')}" alt="Phone"></a>
-            <a href="mailto:nagarshaurya70@gmail.com"><img src="data:image/png;base64,{get_image_base64('email.png')}" alt="Email"></a>
-            <a href="https://www.instagram.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('instagram.png')}" alt="Instagram"></a>
-            <a href="https://www.facebook.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('facebook.png')}" alt="Facebook"></a>
-        </div>
-        <div style="margin-top:6px;">
-            Contact: <b>Shaurya Nagar</b> — +91 8780 69 5872
-        </div>
-        <div style="font-size:12px; margin-top:4px;">
-            © 2025 EcoSchool | <a href="#" style="color:#2E8B57;">Privacy Policy</a> | 
-            <a href="#" style="color:#2E8B57;">Terms of Use</a>
-        </div>
-    </footer>
-    """
-    st.markdown(footer_html, unsafe_allow_html=True)
+<footer>
+    <div>
+        <strong style='font-size: 15px;'>EcoSchool — Building a Greener Tomorrow 🌿</strong>
+    </div>
+    <div style="margin-top:6px;">
+        <a href="tel:+918780695872"><img src="data:image/png;base64,{get_image_base64('phone.png')}" alt="Phone"></a>
+        <a href="mailto:nagarshaurya70@gmail.com"><img src="data:image/png;base64,{get_image_base64('email.png')}" alt="Email"></a>
+        <a href="https://www.instagram.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('instagram.png')}" alt="Instagram"></a>
+        <a href="https://www.facebook.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('facebook.png')}" alt="Facebook"></a>
+    </div>
+    <div style="margin-top:6px;">
+        Contact: <b>Shaurya Nagar</b> — +91 8780 69 5872
+    </div>
+    <div style="font-size:12px; margin-top:4px;">
+        © 2025 EcoSchool | <a href="#" style="color:#2E8B57;">Privacy Policy</a> | 
+        <a href="#" style="color:#2E8B57;">Terms of Use</a>
+    </div>
+</footer>
+"""
 
-# Keep this clean and at the very end
+st.markdown(footer_html, unsafe_allow_html=True)
 if __name__ == '__main__':
     main()
