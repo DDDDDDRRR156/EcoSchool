@@ -345,7 +345,7 @@ div[data-testid="stMetricValue"] {
                 weekly_df = weekly_entries[weekly_entries['date'] >= now - pd.Timedelta(days=7)]
                 if not weekly_df.empty:
                     weekly_leaderboard = weekly_df.groupby(['student', 'class_name']).agg({'co2':'sum'}).reset_index()
-                    weekly_leaderboard = weekly_leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True).head(3)
+                    weekly_leaderboard = weekly_leaderboard.sort_values(by='co2', ascending=True).reset_index(drop=True).head(3)
                     weekly_leaderboard['rank'] = weekly_leaderboard.index + 1
                     for _, row in weekly_leaderboard.iterrows():
                         st.markdown(f"<p style='font-size: 30px;'><strong>{row['rank']}. {row['student']} ({row['class_name']})</strong> — {row['co2']:.2f} kg CO₂ emitted</p>", unsafe_allow_html=True)
