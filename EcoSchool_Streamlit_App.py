@@ -497,6 +497,9 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                     }
                     add_entry_to_db(entry)
                     st.success(f"Saved — recorded {co2:.2f} kg CO₂ saved")
+                    st.markdown("### 💡 Suggestions to reduce CO₂ further:")
+                    for tip in SUGGESTIONS.get(category, []):
+                        st.markdown(f"- {tip}")
 
 
     # -----------------
