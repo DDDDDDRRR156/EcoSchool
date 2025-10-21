@@ -44,6 +44,14 @@ import io
 import base64
 
 # -------------------------
+# Helper for base64 images
+# -------------------------
+def get_image_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode()
+    return encoded_string
+
+# -------------------------
 # Constants & Defaults
 # -------------------------
 DB_FILE = "ecoschool.db"
@@ -160,12 +168,6 @@ def get_factors():
     conn.close()
     return df['factor'].to_dict()
 
-def get_image_base64(image_path):
-    with open(image_path, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode()
-    return encoded_string
-   
-
 
 def set_factor(category, factor):
     conn = sqlite3.connect(DB_FILE)
@@ -205,12 +207,15 @@ def verify_entry(entry_id):
     c.execute('UPDATE entries SET verified=1 WHERE id=?', (entry_id,))
     conn.commit()
     conn.close()
+
+
 def clear_all_entries():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute('DELETE FROM entries')
     conn.commit()
     conn.close()
+
 # -------------------------
 # Business logic
 # -------------------------
@@ -246,7 +251,7 @@ def sidebar_locale():
 # Streamlit App
 # -------------------------
 def main():
-    st.set_page_config(page_title="EcoSchool", layout='wide', page_icon="app_icon.png")
+    st.set_page_config(page_title="EcoSchool", layout='wide', page_icon="🍃")
     init_db()
     loc = sidebar_locale()
     st.markdown("""
@@ -266,7 +271,9 @@ div[data-testid="stMetricValue"] {
 }
 </style>
 """, unsafe_allow_html=True)
-    st.markdown("""
+    # Header with logo
+    logo_base64 = get_image_base64("logo.png")  # Assuming logo.png is in the same directory
+    st.markdown(f"""
     <div class="eco-header" style="
     top: 0;
     left: 0;
@@ -280,8 +287,8 @@ div[data-testid="stMetricValue"] {
     z-index: 9999;
     border-bottom: 2px solid #4CAF50;
     box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-    <img src="logo.PNG" style="height: 60px; margin-right: 20px; vertical-align: middle;">
-        EcoSchool — School Carbon Calculator
+        <img src="data:image/png;base64,{logo_base64}" alt="Logo" style="height: 60px; margin-right: 20px; vertical-align: middle;">
+        🌍 EcoSchool — School Carbon Calculator
     </div>""", unsafe_allow_html=True)
     
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['leaderboard'], loc['settings']])
@@ -307,11 +314,11 @@ div[data-testid="stMetricValue"] {
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
 
             # compute totals
-            total_co2 = entries['co2'].sum()
+            total_co2 = df['co2'].sum()
             st.markdown('<div style="font-size:20px; font-weight:600; color:#ffffff;">Total emissions (kg CO2)</div>', unsafe_allow_html=True)
             st.metric(label="", value=f"{total_co2:.2f}")
 
-            # New: Expandable Class-wise Breakdown
+            # Expandable Class-wise Breakdown
             with st.expander("📊 Class-wise Breakdown / વર્ગ-વાર વિભાજન"):
                 if df.empty:
                     st.info("No data for the selected timeframe.")
@@ -397,7 +404,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
 <hr>
 """, unsafe_allow_html=True)
 
-        # -----------------
+    # -----------------
     # Add entry
     # -----------------
     with tabs[1]:
@@ -443,8 +450,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                     add_entry_to_db(entry)
                     st.success(f"Saved — estimated {co2:.2f} kg CO2")
 
-
-            # -----------------
+    # -----------------
     # Leaderboard / Challenges
     # -----------------
     with tabs[2]:
@@ -474,6 +480,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                 df = df[df['date'] >= now - pd.Timedelta(days=30)]
             elif timeframe == "Last 365 Days":
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
+            # Filter by grade (assuming class_name starts with grade number, e.g., "10A")
             df = df[df['class_name'].str.startswith(str(grade))]
             if df.empty:
                 st.info(f"No verified entries for {grade}th Grade in the selected timeframe.")
@@ -503,18 +510,23 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                     use_container_width=True
                 )
 
-            # -----------------# Admin / Settings# -----------------
+    # -----------------
+    # Admin / Settings
+    # -----------------
     with tabs[3]:
         st.header(loc['settings'])
         st.subheader(loc['admin_login'])
         pwd = st.text_input("Password", type='password')
         if pwd == ADMIN_PASSWORD:
-            st.success("Admin authenticated")# Moved History / Teacher review section here
+            st.success("Admin authenticated")
+
+            # Moved History / Teacher review section here
             st.subheader(loc['history'])
             entries = load_entries()
             if entries.empty:
                 st.info("No entries yet")
-            else:# show a simple feed
+            else:
+                # show a simple feed
                 for _, row in entries.iterrows():
                     cols = st.columns([3,1])
                     with cols[0]:
@@ -530,31 +542,35 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                                 st.rerun()
                         else:
                             st.write("✅ Verified")
+
             st.subheader(loc['edit_factors'])
             factors_df = pd.DataFrame(list(factors.items()), columns=['category','factor'])
             edited = st.data_editor(
-                factors_df,
-                use_container_width=True,
-                disabled=False)
+    factors_df,
+    use_container_width=True,
+    disabled=False
+)
             if st.button(loc['save']):
                 for _, r in edited.iterrows():
                     set_factor(r['category'], r['factor'])
                 st.success("Saved factors")
+
             st.subheader(loc['export_csv'])
             all_entries = load_entries()
             if not all_entries.empty:
                 csv = all_entries.to_csv(index=False)
                 st.download_button("Download CSV", data=csv, file_name='ecoschool_entries.csv', mime='text/csv')
-                # New: Clear All Entries option
+
+            # New: Clear All Entries option
             st.subheader("Clear All Entries")
             st.warning("⚠️ This action will permanently delete all entries. Proceed with caution!")
             if st.button("Clear All Entries"):
                 clear_all_entries()
                 st.success("All entries have been cleared.")
                 st.rerun()  # Refresh the page to update the view
+
         else:
             st.info("Enter admin password to edit factors or export data")
-
 # --- Sticky Footer ---
 footer_html = """
 <style>
