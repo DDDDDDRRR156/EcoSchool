@@ -60,6 +60,31 @@ EQUIVALENTS = {
     "tree_seedlings_1yr": 21.77,  # kg CO2 sequestered per seedling in 10 years -> used as equivalence (adjust as needed)
     "km_driven_car": 0.21
 }
+# -------------------------
+# Suggestions to Reduce Emissions
+# -------------------------
+SUGGESTIONS = {
+    "Paper (sheets)": [
+        "Use both sides of the paper.",
+        "Digitize notes instead of printing.",
+        "Reuse scrap paper for drafts."
+    ],
+    "Plastic (kg)": [
+        "Carry a reusable water bottle.",
+        "Avoid single-use plastic packaging.",
+        "Participate in school plastic recycling drives."
+    ],
+    "Food/Waste (kg)": [
+        "Compost leftover food.",
+        "Avoid food wastage by taking only what you need.",
+        "Use reusable lunch containers instead of disposables."
+    ],
+    "Transport (km)": [
+        "Walk or cycle for short distances.",
+        "Use carpooling or public transport.",
+        "Switch to electric or hybrid vehicles if possible."
+    ]
+}
 
 # Translations
 LOCALES = {
