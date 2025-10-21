@@ -287,7 +287,7 @@ def sidebar_rotating_tip():
     if time.time() - st.session_state.last_update > 60:
         st.session_state.tip_index = (st.session_state.tip_index + 1) % len(ALL_TIPS)
         st.session_state.last_update = time.time()
-        st.experimental_rerun()  # Force rerun to update sidebar
+        st.rerun()  # Force rerun to update sidebar
 
     # Display current tip
     cat, tip = ALL_TIPS[st.session_state.tip_index]
