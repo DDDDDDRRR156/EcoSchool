@@ -450,6 +450,18 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
     # -----------------
     with tabs[2]:
         st.header(loc['leaderboard'])# Timeframe filter
+        st.markdown("### 🏫 Class / Section CO₂ Emission Comparison")
+        class_emissions = df.groupby('class_name')['co2'].sum().reset_index()
+        class_emissions = class_emissions.sort_values(by='co2', ascending=True)
+        st.dataframe(
+            class_emissions.rename(columns={
+                'class_name': 'Class / Section',
+                'co2': 'Total CO₂ Emission (kg)'
+            }).style.background_gradient(subset=['Total CO₂ Emission (kg)'], cmap='Reds').format({
+                'Total CO₂ Emission (kg)': '{:.2f}'
+            }),
+            use_container_width=True
+    )
         timeframe = st.selectbox("Select timeframe", ["All Time", "Last 7 Days", "Last 30 Days", "Last 365 Days"])
         entries = load_entries(only_verified=True)
         if entries.empty:
