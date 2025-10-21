@@ -444,12 +444,15 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                     st.success(f"Saved — estimated {co2:.2f} kg CO2")
 
 
-    # -----------------
+        # -----------------
     # Leaderboard / Challenges
     # -----------------
     with tabs[2]:
-        st.header(loc['leaderboard'])# Timeframe filter
+        st.header(loc['leaderboard'])
+        # Timeframe filter
         timeframe = st.selectbox("Select timeframe", ["All Time", "Last 7 Days", "Last 30 Days", "Last 365 Days"])
+        # New: Grade filter
+        grade = st.selectbox("Select Grade", options=list(range(1, 13)), format_func=lambda x: f"{x}th Grade")
         entries = load_entries(only_verified=True)
         if entries.empty:
             st.info("No verified entries yet — teachers should verify first")
@@ -462,31 +465,36 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                 df = df[df['date'] >= now - pd.Timedelta(days=30)]
             elif timeframe == "Last 365 Days":
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
-            leaderboard = df.groupby(['student', 'class_name']).agg({'co2':'sum'}).reset_index()
-            leaderboard = leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True)
-            leaderboard['rank'] = leaderboard.index + 1
-            def title_for_rank(rank):
-                if rank == 1:
-                    return "🌟 Carbon Star"
-                elif rank <= 3:
-                    return "🥈 Eco Champion"
-                elif rank <= 10:
-                    return "🌿 Green Hero"
-                else:
-                    return "🌱 Seedling"
-            leaderboard['Title'] = leaderboard['rank'].apply(title_for_rank)        
-            st.subheader(f"Leaderboard — {timeframe}")
-            st.dataframe(
-                leaderboard[['rank', 'Title', 'student', 'class_name', 'co2']].rename(columns={
-                    'rank': 'Rank',
-                    'student': 'Student',
-                    'class_name': 'Class / Section',
-                    'co2': 'CO₂ Saved (kg)'
-                }).style.background_gradient(subset=['CO₂ Saved (kg)'], cmap='Greens').format({
-                    'CO₂ Saved (kg)': '{:.2f}'
-                }),
-                use_container_width=True
-            )
+            # Filter by grade (assuming class_name starts with grade number, e.g., "10A")
+            df = df[df['class_name'].str.startswith(str(grade))]
+            if df.empty:
+                st.info(f"No verified entries for {grade}th Grade in the selected timeframe.")
+            else:
+                leaderboard = df.groupby('class_name').agg({'co2':'sum'}).reset_index()
+                leaderboard = leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True)
+                leaderboard['rank'] = leaderboard.index + 1
+                def title_for_rank(rank):
+                    if rank == 1:
+                        return "🌟 Carbon Star"
+                    elif rank <= 3:
+                        return "🥈 Eco Champion"
+                    elif rank <= 10:
+                        return "🌿 Green Hero"
+                    else:
+                        return "🌱 Seedling"
+                leaderboard['Title'] = leaderboard['rank'].apply(title_for_rank)        
+                st.subheader(f"Leaderboard for {grade}th Grade — {timeframe}")
+                st.dataframe(
+                    leaderboard[['rank', 'Title', 'class_name', 'co2']].rename(columns={
+                        'rank': 'Rank',
+                        'class_name': 'Section',
+                        'co2': 'CO₂ Saved (kg)'
+                    }).style.background_gradient(subset=['CO₂ Saved (kg)'], cmap='Greens').format({
+                        'CO₂ Saved (kg)': '{:.2f}'
+                    }),
+                    use_container_width=True
+                )
+
             # -----------------# Admin / Settings# -----------------
     with tabs[3]:
         st.header(loc['settings'])
