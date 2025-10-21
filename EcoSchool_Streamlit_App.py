@@ -287,17 +287,12 @@ div[data-testid="stMetricValue"] {
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['leaderboard'], loc['settings']])
 
     factors = get_factors()
-    with tabs[0]:
+        with tabs[0]:
         st.header(loc['dashboard'])
         entries = load_entries()
         if entries.empty:
             st.info("No entries yet — ask students to add today's activities!")
         else:
-            # compute totals
-            total_co2 = entries['co2'].sum()
-            st.markdown('<div style="font-size:20px; font-weight:600; color:#ffffff;">Total emissions (kg CO2)</div>', unsafe_allow_html=True)
-            st.metric(label="", value=f"{total_co2:.2f}")
-
             # timeframe filters
             col1, col2 = st.columns([2,1])
             with col2:
@@ -310,6 +305,28 @@ div[data-testid="stMetricValue"] {
                 df = df[df['date'] >= now - pd.Timedelta(days=30)]
             elif timeframe == 'Last 365 days':
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
+
+            # compute totals
+            total_co2 = entries['co2'].sum()
+            st.markdown('<div style="font-size:20px; font-weight:600; color:#ffffff;">Total emissions (kg CO2)</div>', unsafe_allow_html=True)
+            st.metric(label="", value=f"{total_co2:.2f}")
+
+            # New: Expandable Class-wise Breakdown
+            with st.expander("📊 Class-wise Breakdown / વર્ગ-વાર વિભાજન"):
+                if df.empty:
+                    st.info("No data for the selected timeframe.")
+                else:
+                    class_breakdown = df.groupby('class_name')['co2'].sum().reset_index().sort_values(by='co2', ascending=False)
+                    if not class_breakdown.empty:
+                        chart = alt.Chart(class_breakdown).mark_bar().encode(
+                            x=alt.X('co2:Q', title='kg CO2'),
+                            y=alt.Y('class_name:N', sort='-x', title='Class / Section')
+                        )
+                        st.altair_chart(chart, use_container_width=True)
+                        # Optional: Show as table too
+                        st.dataframe(class_breakdown.rename(columns={'class_name': 'Class / Section', 'co2': 'Total CO₂ (kg)'}).style.format({'Total CO₂ (kg)': '{:.2f}'}))
+                    else:
+                        st.info("No class data available.")
 
             # breakdown
             breakdown = df.groupby('category')['co2'].sum().reset_index()
