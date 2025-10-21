@@ -487,7 +487,8 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                     return "🌿 Green Hero"
                 else:
                     return "🌱 Seedling"
-            leaderboard['Title'] = leaderboard['rank'].apply(title_for_rank)        
+            leaderboard['Title'] = leaderboard['rank'].apply(title_for_rank)  
+            st.write("DEBUG — leaderboard columns:", leaderboard.columns.tolist())
             st.subheader(f"Leaderboard — {timeframe}")
             st.dataframe(
                 leaderboard[['rank', 'Title', 'student', 'class_name', 'co2']].rename(columns={
