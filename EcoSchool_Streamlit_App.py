@@ -575,53 +575,54 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
 
         else:
             st.info("Enter admin password to edit factors or export data")
-# --- Sticky Footer ---
-footer_html = """
-<style>
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #f0f0f0;
-    color: #333;
-    text-align: center;
-    padding: 12px 0;
-    font-size: 14px;
-    border-top: 1px solid #ccc;
-    z-index: 100;
-}
-footer img {
-    width: 28px;
-    margin: 0 10px;
-    vertical-align: middle;
-}
-footer img:hover {
-    transform: scale(1.15);
-    transition: 0.3s;
-}
-</style>
+    # --- Sticky Footer ---
+    footer_html = f"""
+    <style>
+    footer {{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #f0f0f0;
+        color: #333;
+        text-align: center;
+        padding: 12px 0;
+        font-size: 14px;
+        border-top: 1px solid #ccc;
+        z-index: 100;
+    }}
+    footer img {{
+        width: 28px;
+        margin: 0 10px;
+        vertical-align: middle;
+    }}
+    footer img:hover {{
+        transform: scale(1.15);
+        transition: 0.3s;
+    }}
+    </style>
 
-<footer>
-    <div>
-        <strong style='font-size: 15px;'>EcoSchool — Building a Greener Tomorrow 🌿</strong>
-    </div>
-    <div style="margin-top:6px;">
-        <a href="tel:+918780695872"><img src="data:image/png;base64,{get_image_base64('phone.png')}" alt="Phone"></a>
-        <a href="mailto:nagarshaurya70@gmail.com"><img src="data:image/png;base64,{get_image_base64('email.png')}" alt="Email"></a>
-        <a href="https://www.instagram.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('instagram.png')}" alt="Instagram"></a>
-        <a href="https://www.facebook.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('facebook.png')}" alt="Facebook"></a>
-    </div>
-    <div style="margin-top:6px;">
-        Contact: <b>Shaurya Nagar</b> — +91 8780 69 5872
-    </div>
-    <div style="font-size:12px; margin-top:4px;">
-        © 2025 EcoSchool | <a href="#" style="color:#2E8B57;">Privacy Policy</a> | 
-        <a href="#" style="color:#2E8B57;">Terms of Use</a>
-    </div>
-</footer>
-"""
+    <footer>
+        <div>
+            <strong style='font-size: 15px;'>EcoSchool — Building a Greener Tomorrow 🌿</strong>
+        </div>
+        <div style="margin-top:6px;">
+            <a href="tel:+918780695872"><img src="data:image/png;base64,{get_image_base64('phone.png')}" alt="Phone"></a>
+            <a href="mailto:nagarshaurya70@gmail.com"><img src="data:image/png;base64,{get_image_base64('email.png')}" alt="Email"></a>
+            <a href="https://www.instagram.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('instagram.png')}" alt="Instagram"></a>
+            <a href="https://www.facebook.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('facebook.png')}" alt="Facebook"></a>
+        </div>
+        <div style="margin-top:6px;">
+            Contact: <b>Shaurya Nagar</b> — +91 8780 69 5872
+        </div>
+        <div style="font-size:12px; margin-top:4px;">
+            © 2025 EcoSchool | <a href="#" style="color:#2E8B57;">Privacy Policy</a> | 
+            <a href="#" style="color:#2E8B57;">Terms of Use</a>
+        </div>
+    </footer>
+    """
+    st.markdown(footer_html, unsafe_allow_html=True)
 
-st.markdown(footer_html, unsafe_allow_html=True)
+# Keep this clean and at the very end
 if __name__ == '__main__':
     main()
