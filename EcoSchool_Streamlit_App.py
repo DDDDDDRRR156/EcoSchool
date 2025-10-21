@@ -241,6 +241,15 @@ def badge_for_total(total_kg):
 def sidebar_locale():
     lang = st.sidebar.selectbox("Language / ભાષા", options=['en', 'gu'], format_func=lambda x: 'English' if x=='en' else 'ગુજરાતી')
     return LOCALES[lang]
+def sidebar_tips():
+    st.sidebar.markdown("---")  # Divider
+    st.sidebar.markdown("### 💡 Tips to Reduce Emissions / CARBON SAVINGS")
+
+    # Iterate through SUGGESTIONS dict
+    for cat, tips in SUGGESTIONS.items():
+        st.sidebar.markdown(f"**{cat}**")
+        for tip in tips:
+            st.sidebar.markdown(f"- {tip}")
 
 # -------------------------
 # Streamlit App
@@ -309,7 +318,7 @@ div[data-testid="stMetricValue"] {
 
             # compute totals
             total_co2 = entries['co2'].sum()
-            st.markdown('<div style="font-size:20px; font-weight:600; color:#ffffff;">Total emissions (kg CO2)</div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-size:20px; font-weight:600; color:#ffffff;">Total CO2 Saved(kg CO2)</div>', unsafe_allow_html=True)
             st.metric(label="", value=f"{total_co2:.2f}")
 
             # New: Expandable Class-wise Breakdown
@@ -345,10 +354,10 @@ div[data-testid="stMetricValue"] {
                 weekly_df = weekly_entries[weekly_entries['date'] >= now - pd.Timedelta(days=7)]
                 if not weekly_df.empty:
                     weekly_leaderboard = weekly_df.groupby(['student', 'class_name']).agg({'co2':'sum'}).reset_index()
-                    weekly_leaderboard = weekly_leaderboard.sort_values(by='co2', ascending=True).reset_index(drop=True).head(3)
+                    weekly_leaderboard = weekly_leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True).head(3)
                     weekly_leaderboard['rank'] = weekly_leaderboard.index + 1
                     for _, row in weekly_leaderboard.iterrows():
-                        st.markdown(f"<p style='font-size: 30px;'><strong>{row['rank']}. {row['student']} ({row['class_name']})</strong> — {row['co2']:.2f} kg CO₂ emitted</p>", unsafe_allow_html=True)
+                        st.markdown(f"<p style='font-size: 30px;'><strong>{row['rank']}. {row['student']} ({row['class_name']})</strong> — {row['co2']:.2f} kg CO₂ saved</p>", unsafe_allow_html=True)
                 else:
                     st.info("No verified entries in the last 7 days.")
             else:
@@ -442,7 +451,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
                         'co2': co2
                     }
                     add_entry_to_db(entry)
-                    st.success(f"Saved — recorded {co2:.2f} kg CO₂ emitted")
+                    st.success(f"Saved — recorded {co2:.2f} kg CO₂ saved")
 
 
     # -----------------
@@ -450,14 +459,14 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
     # -----------------
     with tabs[2]:
         st.header(loc['leaderboard'])# Timeframe filter
-        st.markdown("### 🏫 Class / Section CO₂ Emission Comparison")
+        st.markdown("### 🏫 Class / Section CO₂ Saved Comparison")
         class_emissions = df.groupby('class_name')['co2'].sum().reset_index()
-        class_emissions = class_emissions.sort_values(by='co2', ascending=True)
+        class_emissions = class_emissions.sort_values(by='co2', ascending=False)
         st.dataframe(
             class_emissions.rename(columns={
                 'class_name': 'Class / Section',
-                'co2': 'Total CO₂ Emission (kg)'
-            }).style.background_gradient(subset=['Total CO₂ Emission (kg)'], cmap='Reds').format({
+                'co2': 'Total CO₂ Saved (kg)'
+            }).style.background_gradient(subset=['Total CO₂ Saved (kg)'], cmap='Reds').format({
                 'Total CO₂ Emission (kg)': '{:.2f}'
             }),
             use_container_width=True
@@ -476,7 +485,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
             elif timeframe == "Last 365 Days":
                 df = df[df['date'] >= now - pd.Timedelta(days=365)]
             leaderboard = df.groupby(['student', 'class_name']).agg({'co2':'sum'}).reset_index()
-            leaderboard = leaderboard.sort_values(by='co2', ascending=True).reset_index(drop=True)
+            leaderboard = leaderboard.sort_values(by='co2', ascending=False).reset_index(drop=True)
             leaderboard['rank'] = leaderboard.index + 1
             def title_for_rank(rank):
                 if rank == 1:
@@ -496,7 +505,7 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
         "Title": "Activity",
         "student": "Student",
         "class_name": "Class",
-        "co2": "CO₂ Emitted (kg)"
+        "co2": "CO₂ Saved (kg)"
     }),
     use_container_width=True
 )
