@@ -344,7 +344,7 @@ div[data-testid="stMetricValue"] {
     with tabs[0]:
         st.header(loc['dashboard'])
         entries = load_entries()
-        if entries:
+        if entries is not None and len(entries) > 0:
             df = pd.DataFrame(entries)
             df['date'] = pd.to_datetime(df['date'])
         else:
