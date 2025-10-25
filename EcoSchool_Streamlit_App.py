@@ -344,10 +344,12 @@ div[data-testid="stMetricValue"] {
     with tabs[0]:
         st.header(loc['dashboard'])
         entries = load_entries()
-        if entries.empty:
-            st.info("No entries yet — ask students to add today's activities!")
+        if entries:
+            df = pd.DataFrame(entries)
+            df['date'] = pd.to_datetime(df['date'])
         else:
-            
+            st.info("No entries yet!")
+            return           
             # timeframe filters
             col1, col2 = st.columns([2,1])
             with col2:
