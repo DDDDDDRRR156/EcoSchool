@@ -334,7 +334,7 @@ div[data-testid="stMetricValue"] {
     z-index: 9999;
     border-bottom: 2px solid #4CAF50;
     box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-    <img src="logo.PNG" style="height: 60px; margin-right: 20px; vertical-align: middle;">
+    <img src="logo.png" style="height: 60px; margin-right: 20px; vertical-align: middle;">
         EcoSchool — School Carbon Calculator
     </div>""", unsafe_allow_html=True)
 
