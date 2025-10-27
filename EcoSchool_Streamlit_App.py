@@ -193,12 +193,9 @@ def get_factors():
     conn.close()
     return df['factor'].to_dict()
 
-def get_image_base64(image_path):
-    with open(image_path, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode()
-    return encoded_string
-
-
+def get_base64_logo(path):
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
 
 def set_factor(category, factor):
     conn = sqlite3.connect(DB_FILE)
@@ -320,11 +317,13 @@ div[data-testid="stMetricValue"] {
 }
 </style>
 """, unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 5])
-    with col1:
-        st.image("logo.png", width=80)
-    with col2:
-        st.markdown("<h1 style='font-size: 2.5rem; font-weight: 700;'>EcoSchool — School Carbon Calculator</h1>", unsafe_allow_html=True)
+    logo_b64 = get_base64_logo("logo.png")
+    st.markdown(f"""
+<div style="display:flex; align-items:center;">
+    <img src="data:image/png;base64,{logo_b64}" style="height:60px; margin-right:15px;">
+    <h1 style="font-size:2.2rem; font-weight:700;">EcoSchool — School Carbon Calculator</h1>
+</div>
+""", unsafe_allow_html=True))
     
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['leaderboard'], loc['settings']])
 
