@@ -336,7 +336,7 @@ div[data-testid="stMetricValue"] {
             df['date'] = pd.to_datetime(df['date'])
         else:
             st.info("No entries yet!")
-            return           
+            df = pd.DataFrame(columns=['date','student','class_name','category','quantity','unit','co2'])          
             # timeframe filters
             col1, col2 = st.columns([2,1])
             with col2:
