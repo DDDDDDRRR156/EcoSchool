@@ -612,10 +612,33 @@ import streamlit as st
 # def get_image_base64(image_path):
 #     # Your implementation here to return base64 string
 
+# Load icons safely
+icons = {
+    "phone": get_image_base64("phone.png"),
+    "email": get_image_base64("email.png"),
+    "instagram": get_image_base64("instagram.png"),
+    "facebook": get_image_base64("facebook.png")
+}
+
+# Fallback URLs (if local icons aren't found)
+fallbacks = {
+    "phone": "https://cdn-icons-png.flaticon.com/512/597/597177.png",
+    "email": "https://cdn-icons-png.flaticon.com/512/561/561127.png",
+    "instagram": "https://cdn-icons-png.flaticon.com/512/1384/1384031.png",
+    "facebook": "https://cdn-icons-png.flaticon.com/512/1384/1384005.png"
+}
+
+def icon_html(name, href="#"):
+    if icons[name]:
+        src = f"data:image/png;base64,{icons[name]}"
+    else:
+        src = fallbacks[name]
+    return f'<a href="{href}" target="_blank"><img src="{src}" height="28" style="margin:0 8px;"></a>'
+
 # --- Sticky Footer ---
-footer_html = """
+footer_html = f"""
 <style>
-footer {
+footer {{
     position: fixed;
     bottom: 0;
     left: 0;
@@ -627,16 +650,16 @@ footer {
     font-size: 14px;
     border-top: 1px solid #ccc;
     z-index: 100;
-}
-footer img {
+}}
+footer img {{
     width: 28px;
     margin: 0 10px;
     vertical-align: middle;
-}
-footer img:hover {
+}}
+footer img:hover {{
     transform: scale(1.15);
     transition: 0.3s;
-}
+}}
 </style>
 
 <footer>
@@ -644,10 +667,10 @@ footer img:hover {
         <strong style='font-size: 15px;'>EcoSchool — Building a Greener Tomorrow 🌿</strong>
     </div>
     <div style="margin-top:6px;">
-        <a href="tel:+918780695872"><img src="data:image/png;base64,{get_image_base64('phone.png')}" alt="Phone"></a>
-        <a href="mailto:nagarshaurya70@gmail.com"><img src="data:image/png;base64,{get_image_base64('email.png')}" alt="Email"></a>
-        <a href="https://www.instagram.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('instagram.png')}" alt="Instagram"></a>
-        <a href="https://www.facebook.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('facebook.png')}" alt="Facebook"></a>
+        {icon_html('phone', 'tel:+918780695872')}
+        {icon_html('email', 'mailto:nagarshaurya70@gmail.com')}
+        {icon_html('instagram', 'https://www.instagram.com')}
+        {icon_html('facebook', 'https://www.facebook.com')}
     </div>
     <div style="margin-top:6px;">
         Contact: <b>Shaurya Nagar</b> — +91 8780 69 5872
@@ -660,9 +683,6 @@ footer img:hover {
 """
 
 st.markdown(footer_html, unsafe_allow_html=True)
-
-
-
 
 if __name__ == '__main__':
     main()
