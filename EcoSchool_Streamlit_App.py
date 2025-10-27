@@ -148,6 +148,13 @@ ALL_TIPS = []
 for cat, tips in SUGGESTIONS.items():
     for tip in tips:
         ALL_TIPS.append((cat, tip))
+
+def get_image_base64(path):
+    """Safely load an image as base64 string if it exists."""
+    if not os.path.exists(path):
+        return None
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
 # -------------------------
 # Database helpers
 # -------------------------
