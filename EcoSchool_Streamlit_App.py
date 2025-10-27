@@ -600,53 +600,54 @@ Through small, everyday actions—like saving paper, reducing waste, or using ec
         else:
             st.info("Enter admin password to edit factors or export data")
 
-# --- Sticky Footer ---
-footer_html = """
+# --- Footer ---
+st.markdown("---")
+
+# Load icons safely
+icons = {
+    "phone": get_image_base64("phone.png"),
+    "email": get_image_base64("email.png"),
+    "instagram": get_image_base64("instagram.png"),
+    "facebook": get_image_base64("facebook.png")
+}
+
+# Fallback URLs (if local icons aren't found)
+fallbacks = {
+    "phone": "https://cdn-icons-png.flaticon.com/512/597/597177.png",
+    "email": "https://cdn-icons-png.flaticon.com/512/561/561127.png",
+    "instagram": "https://cdn-icons-png.flaticon.com/512/1384/1384031.png",
+    "facebook": "https://cdn-icons-png.flaticon.com/512/1384/1384005.png"
+}
+
+def icon_html(name, href="#"):
+    if icons[name]:
+        src = f"data:image/png;base64,{icons[name]}"
+    else:
+        src = fallbacks[name]
+    return f'<a href="{href}" target="_blank"><img src="{src}" height="28" style="margin:0 8px;"></a>'
+
+# Footer layout
+st.markdown("""
 <style>
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #f0f0f0;
-    color: #333;
-    text-align: center;
-    padding: 12px 0;
-    font-size: 14px;
-    border-top: 1px solid #ccc;
-    z-index: 100;
-}
-footer img {
-    width: 28px;
-    margin: 0 10px;
-    vertical-align: middle;
-}
-footer img:hover {
-    transform: scale(1.15);
-    transition: 0.3s;
+a img:hover {
+    filter: brightness(1.3);
+    transform: scale(1.1);
+    transition: 0.2s;
 }
 </style>
+""", unsafe_allow_html=True)
 
-<footer>
-    <div>
-        <strong style='font-size: 15px;'>EcoSchool — Building a Greener Tomorrow 🌿</strong>
-    </div>
-    <div style="margin-top:6px;">
-        <a href="tel:+918780695872"><img src="data:image/png;base64,{get_image_base64('phone.png')}" alt="Phone"></a>
-        <a href="mailto:nagarshaurya70@gmail.com"><img src="data:image/png;base64,{get_image_base64('email.png')}" alt="Email"></a>
-        <a href="https://www.instagram.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('instagram.png')}" alt="Instagram"></a>
-        <a href="https://www.facebook.com" target="_blank"><img src="data:image/png;base64,{get_image_base64('facebook.png')}" alt="Facebook"></a>
-    </div>
-    <div style="margin-top:6px;">
-        Contact: <b>Shaurya Nagar</b> — +91 8780 69 5872
-    </div>
-    <div style="font-size:12px; margin-top:4px;">
-        © 2025 EcoSchool | <a href="#" style="color:#2E8B57;">Privacy Policy</a> | 
-        <a href="#" style="color:#2E8B57;">Terms of Use</a>
-    </div>
-</footer>
-"""
+st.markdown(f"""
+<div style="display:flex; justify-content:center; align-items:center; margin-top:20px;">
+    {icon_html('phone', 'tel:+918780695872')}
+    {icon_html('email', 'mailto:nagarshaurya70@gmail.com')}
+    {icon_html('instagram', 'https://instagram.com')}
+    {icon_html('facebook', 'https://facebook.com')}
+</div>
+<p style="text-align:center; font-size:13px; margin-top:8px; opacity:0.6;">
+    © 2025 EcoSchool | Designed by Udgam School For Children Team
+</p>
+""", unsafe_allow_html=True)
 
-st.markdown(footer_html, unsafe_allow_html=True)
 if __name__ == '__main__':
     main()
