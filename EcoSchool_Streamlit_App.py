@@ -321,12 +321,11 @@ div[data-testid="stMetricValue"] {
 </style>
 """, unsafe_allow_html=True)
     col1, col2 = st.columns([1, 5])
-with col1:
-    st.image("logo.png", width=80)
-with col2:
-    st.markdown("<h1 style='font-size: 2.5rem; font-weight: 700;'>EcoSchool — School Carbon Calculator</h1>", unsafe_allow_html=True)
-
-
+    with col1:
+        st.image("logo.png", width=80)
+    with col2:
+        st.markdown("<h1 style='font-size: 2.5rem; font-weight: 700;'>EcoSchool — School Carbon Calculator</h1>", unsafe_allow_html=True)
+    
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['leaderboard'], loc['settings']])
 
     factors = get_factors()
