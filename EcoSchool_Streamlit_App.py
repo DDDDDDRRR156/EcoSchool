@@ -323,7 +323,7 @@ div[data-testid="stMetricValue"] {
     <img src="data:image/png;base64,{logo_b64}" style="height:60px; margin-right:15px;">
     <h1 style="font-size:2.2rem; font-weight:700;">EcoSchool — School Carbon Calculator</h1>
 </div>
-""", unsafe_allow_html=True))
+""", unsafe_allow_html=True)
     
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['leaderboard'], loc['settings']])
 
