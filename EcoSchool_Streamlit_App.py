@@ -320,23 +320,12 @@ div[data-testid="stMetricValue"] {
 }
 </style>
 """, unsafe_allow_html=True)
-    st.markdown("""
-    <div class="eco-header" style="
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #0E1117;
-    color: white;
-    text-align: center;
-    font-size: 3rem;
-    font-weight: 700;
-    padding: 1rem 0;
-    z-index: 9999;
-    border-bottom: 2px solid #4CAF50;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-    <img src="logo.png" style="height: 60px; margin-right: 20px; vertical-align: middle;">
-        EcoSchool — School Carbon Calculator
-    </div>""", unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 5])
+with col1:
+    st.image("logo.png", width=80)
+with col2:
+    st.markdown("<h1 style='font-size: 2.5rem; font-weight: 700;'>EcoSchool — School Carbon Calculator</h1>", unsafe_allow_html=True)
+)
 
     tabs = st.tabs([loc['dashboard'], loc['add_entry'], loc['leaderboard'], loc['settings']])
 
