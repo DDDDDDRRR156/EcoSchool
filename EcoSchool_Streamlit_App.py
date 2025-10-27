@@ -633,6 +633,22 @@ def icon_html(name, href="#"):
         src = fallbacks[name]
     return f'<a href="{href}" target="_blank"><img src="{src}" height="28" style="margin:0 8px;"></a>'
 
+st.markdown("""
+<style>
+footer, .footer, div[data-testid="stToolbar"] + div + div + div > div:last-child {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #0e1117 !important;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    padding: 8px 0;
+    z-index: 100;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Footer layout
 st.markdown("""
 <style>
